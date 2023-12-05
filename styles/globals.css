@@ -1,0 +1,58 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.main {
+    width: 100vw;
+    min-height: 100vh;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    padding: 120px 24px 160px 24px;
+    pointer-events: none;
+  }
+
+  .sliderHeading{
+    -webkit-text-stroke-width: 2px;
+    -webkit-text-stroke-color: #4b077c;
+  }
+
+
+  @layer components{
+    .orange_gradient {
+        @apply bg-gradient-to-r from-orange-600 via-orange-400 to-orange-200 bg-clip-text text-transparent
+      }
+  }
+
+  .flex-between{
+    @apply flex justify-between items-center;
+  }
+  .nav_text{
+    @apply text-base font-satoshi font-semibold text-gray-800 hover:text-red-500
+  }
+  .dropdown {
+    @apply absolute right-1 top-full mt-7 w-full p-10 rounded-lg bg-white min-w-[390px] flex flex-col gap-3 justify-start items-start;
+  }
+  .active_link{
+    @apply text-orange-500 underline-offset-1 underline;
+  }
+  .cart_count{
+    @apply absolute bg-red-500 text-white text-xs rounded-full mt-[-5px] ml-5 px-[5px] py-[0.5px]
+  }
+.swiperSlide{
+  @apply flex justify-center items-center flex-col 
+}
+
+
+
+  /* .arrow_slider{
+    @apply w-10 h-10 z-10 absolute cursor-pointer top-[50%] transform -translate-y-1/2  hover:scale-110 hover:text-orange-500
+  }
+  .slide{
+    @apply w-full h-[50vh] flex justify-center items-center absolute top-[50%] left-0 opacity-0 transform -translate-x-1/2 transition-all ease-in-out duration-500
+  }
+  .current{
+    @apply opacity-100 transform translate-x-0
+  } */
