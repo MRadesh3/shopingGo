@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RESET_AUTH, logout, getuser } from "../redux/features/auth/authSlice";
+import { RESET_AUTH, getuser } from "../redux/features/auth/authSlice";
 import Image from "next/image";
 import MetaData from "@components/MetaData";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
@@ -20,15 +20,13 @@ const Page = () => {
   const dispatch = useDispatch();
   const { isLoggedIn, isLoading, user } = useSelector((state) => state.auth);
 
-  const handleSignOut = async () => {
-    await dispatch(logout());
-    await dispatch(RESET_AUTH());
-    router.push("/login");
-  };
-
   useEffect(() => {
-    dispatch(getuser());
-  }, [dispatch]);
+    if (isLoggedIn) {
+      dispatch(getuser());
+    } else {
+      dispatch(RESET_AUTH());
+    }
+  }, [dispatch, isLoggedIn]);
 
   return (
     <section className="md:mt-20 mt-[80px] mb-20">

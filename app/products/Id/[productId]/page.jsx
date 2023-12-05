@@ -11,6 +11,7 @@ import {
   getproductdetails,
   addproductreview,
 } from "../../../redux/features/product/productSlice";
+import { getuser } from "../../../redux/features/auth/authSlice";
 import { useEffect } from "react";
 import Image from "next/image";
 import Loading from "@app/loading";
@@ -37,6 +38,7 @@ const ProductDetails = (req, { params }) => {
   const { isLoading, isSuccess, isError, product } = useSelector(
     (state) => state.product
   );
+  const { user } = useSelector((state) => state.auth);
 
   const [quantity, setQuantity] = useState(1);
   const [open, setOpen] = useState(false);
@@ -84,6 +86,7 @@ const ProductDetails = (req, { params }) => {
 
   useEffect(() => {
     dispatch(getproductdetails(productId));
+    dispatch(getuser());
   }, [dispatch, productId]);
 
   return (
@@ -330,7 +333,7 @@ const ProductDetails = (req, { params }) => {
                     >
                       <div className="flex gap-5 justify-start items-center">
                         <Image
-                          src="https://media-ik.croma.com/prod/https://media.croma.com/image/upload/v1663783174/Croma%20Assets/Entertainment/Television/Images/251389_0_ek54hr.png?tr=w-480"
+                          src={user && user.avatar && user.avatar.url}
                           alt="reviewer image"
                           width={60}
                           height={60}

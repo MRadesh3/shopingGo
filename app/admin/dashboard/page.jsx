@@ -5,9 +5,18 @@ import MetaData from "@components/MetaData";
 import Link from "next/link";
 import LineChart from "@components/LineChart";
 import DoughnutChart from "@components/DoughnutChart";
-import { getadminproducts } from "@app/redux/features/admin/products/productSliceAd";
-import { getallorders } from "@app/redux/features/admin/orders/orderSliceAd";
-import { getallusers } from "@app/redux/features/admin/users/usersSliceAd";
+import {
+  getadminproducts,
+  RESET_PRODUCT_STATE,
+} from "@app/redux/features/admin/products/productSliceAd";
+import {
+  getallorders,
+  RESET_ORDER,
+} from "@app/redux/features/admin/orders/orderSliceAd";
+import {
+  getallusers,
+  RESET_USER,
+} from "@app/redux/features/admin/users/usersSliceAd";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "@app/loading";
@@ -30,9 +39,16 @@ const Page = () => {
   const inStock = products && products.length - outOfStock;
 
   useEffect(() => {
-    dispatch(getadminproducts());
-    dispatch(getallorders());
-    dispatch(getallusers());
+    try {
+      dispatch(getadminproducts());
+      dispatch(getallorders());
+      dispatch(getallusers());
+    } catch (error) {
+      console.log(error);
+      dispatch(RESET_ORDER());
+      dispatch(RESET_PRODUCT_STATE());
+      dispatch(RESET_USER());
+    }
   }, [dispatch]);
 
   return (
@@ -55,7 +71,7 @@ const Page = () => {
             <>
               <div className="grid grid-cols-4 gap-4 mb-20">
                 <div className="bg-cyan-500 shadow-lg shadow-cyan-500/50 text-white max-md:col-span-4 p-4 rounded-xl flex justify-center items-center gap-5 text-center">
-                  <Link href="">
+                  <Link href="/admin/dashboard">
                     <p className="font-satoshi font-semibold text-lg tracking-wide mb-2">
                       Total Amount
                     </p>
@@ -78,7 +94,7 @@ const Page = () => {
                   </Link>
                 </div>
                 <div className="bg-[#8bc13d] shadow-lg shadow-[#8bc13d] text-white max-md:col-span-4 p-4 rounded-xl flex justify-center items-center gap-5 text-center">
-                  <Link href="/admin/products">
+                  <Link href="/admin/orders">
                     <p className="font-satoshi font-semibold text-lg tracking-wide mb-2">
                       Orders
                     </p>
@@ -88,7 +104,7 @@ const Page = () => {
                   </Link>
                 </div>
                 <div className="bg-[#4b077c] shadow-lg shadow-[#4b077c] text-white max-md:col-span-4 p-4 rounded-xl flex justify-center items-center gap-5 text-center">
-                  <Link href="/admin/products">
+                  <Link href="/admin/users">
                     <p className="font-satoshi font-semibold text-lg tracking-wide mb-2">
                       Users
                     </p>

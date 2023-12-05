@@ -100,7 +100,7 @@ const orderSliceAd = createSlice({
   name: "orderAd",
   initialState,
   reducers: {
-    resetOrder: (state) => {
+    RESET_ORDER: (state) => {
       state.isLoading = false;
       state.isError = false;
       state.isSuccess = false;
@@ -186,6 +186,6 @@ const orderSliceAd = createSlice({
   },
 });
 
-export const { resetOrder } = orderSliceAd.actions;
+export const { RESET_ORDER } = orderSliceAd.actions;
 
 export default orderSliceAd.reducer;

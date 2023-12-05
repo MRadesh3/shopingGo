@@ -12,7 +12,6 @@ import { RESET_AUTH, logout } from "../app/redux/features/auth/authSlice";
 const UserOptions = ({ user }) => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { isLoggedIn } = useSelector((state) => state.auth);
   const [open, setOpen] = useState(false);
 
   const dashboard = () => {
@@ -28,10 +27,8 @@ const UserOptions = ({ user }) => {
     setOpen(false);
   };
   const logoutuser = () => {
+    localStorage.removeItem("token");
     dispatch(logout());
-    dispatch(RESET_AUTH());
-    dispatch(RESET_AUTH);
-    router.push("/login");
   };
 
   const options = [
