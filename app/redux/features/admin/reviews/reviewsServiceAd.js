@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/api/products/productreviews";
+const API_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api/products/productreviews`;
 
 // Get All Reviews - Admin
 

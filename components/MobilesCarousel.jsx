@@ -68,7 +68,7 @@ const ProductCarousel = () => {
           {products && (
             <div>
               {products.map((product) => (
-                <SwiperSlide key={product.id}>
+                <SwiperSlide key={product._id}>
                   <div className="shadow-xl w-full px-5 py-10 hfull mb-20 rounded-xl">
                     <Link href={`/products/Id/${product._id}`}>
                       <Image

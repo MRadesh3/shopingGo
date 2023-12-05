@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const API_URL = `http://localhost:3000/api/products`;
+const API_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api/products`;
 
-const ADMIN_API_URL = `http://localhost:3000/api/auth/admin/products`;
+const ADMIN_API_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/admin/products`;
 
 // Get Admin Products
 

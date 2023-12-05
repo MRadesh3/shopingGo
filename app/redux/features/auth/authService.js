@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const API_URL = `http://localhost:3000/api/auth/`;
+export const API_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/`;
 
 // Register User
 
