@@ -12,8 +12,11 @@ export const PUT = async (req, { params }, next) => {
       const user = await User.findById(req.user._id);
 
       const review = {
-        user: user._id,
-        name: user.name,
+        userid: user._id,
+        user: {
+          name: user.name,
+          avatar: user.avatar.url,
+        },
         rating: Number(rating),
         comment,
       };

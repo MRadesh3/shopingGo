@@ -14,6 +14,7 @@ import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import Loading from "@app/loading";
+import { dateIN } from "@functions";
 
 const Page = () => {
   const router = useRouter();
@@ -142,7 +143,7 @@ const Page = () => {
                           <CalendarMonthIcon /> &nbsp; Joined On
                         </p>
                         <h1 className="text-base font-medium mb-2">
-                          {user.user.createdAt.substring(0, 10)}
+                          {dateIN(user.user.createdAt)}
                         </h1>
                       </div>
                     </div>

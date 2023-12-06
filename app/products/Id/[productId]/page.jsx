@@ -11,7 +11,6 @@ import {
   getproductdetails,
   addproductreview,
 } from "../../../redux/features/product/productSlice";
-import { getuser } from "../../../redux/features/auth/authSlice";
 import { useEffect } from "react";
 import Image from "next/image";
 import Loading from "@app/loading";
@@ -38,7 +37,6 @@ const ProductDetails = (req, { params }) => {
   const { isLoading, isSuccess, isError, product } = useSelector(
     (state) => state.product
   );
-  const { user } = useSelector((state) => state.auth);
 
   const [quantity, setQuantity] = useState(1);
   const [open, setOpen] = useState(false);
@@ -86,7 +84,6 @@ const ProductDetails = (req, { params }) => {
 
   useEffect(() => {
     dispatch(getproductdetails(productId));
-    dispatch(getuser());
   }, [dispatch, productId]);
 
   return (
@@ -331,16 +328,16 @@ const ProductDetails = (req, { params }) => {
                       key={review._id}
                       className="shadow-xl col-span-1 max-lg:col-span-2 max-md:col-span-4 rounded-lg p-6 max-md:w-full max-lg:w-[100%] mb-5"
                     >
-                      <div className="flex gap-5 justify-start items-center">
+                      <div className="flex gap-5 justify-start items-center mb-5">
                         <Image
-                          src={user && user.avatar && user.avatar.url}
+                          src={review.user.avatar}
                           alt="reviewer image"
-                          width={60}
-                          height={60}
-                          className="rounded-full"
+                          width={40}
+                          height={10}
+                          className="rounded-full object-cover h-10"
                         ></Image>
-                        <h1 className="font-satoshi text-[#4b077c] font-semibold mb-4">
-                          {review.name}
+                        <h1 className="font-satoshi text-[#4b077c] font-semibold">
+                          {review.user.name}
                         </h1>
                       </div>
                       <Rating value={review.rating} size="small" readOnly />

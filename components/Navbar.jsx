@@ -27,6 +27,10 @@ const Navbar = () => {
     setActiveLink(index);
   };
 
+  useEffect(() => {
+    dispatch(getloginstatus());
+  }, [dispatch]);
+
   const toggleDropdownHandler = () => {
     setToggleDropdown(!toggleDropdown);
   };
@@ -34,8 +38,6 @@ const Navbar = () => {
   useEffect(() => {
     if (isLoggedIn && isSuccess) {
       dispatch(getuser());
-    } else {
-      dispatch(RESET_AUTH());
     }
   }, [dispatch, isLoggedIn, isSuccess]);
 
