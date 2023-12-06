@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 
 export const GET = async (req, res) => {
   await connectToDB();
-  const token = await cookies().get("token").value;
+  const token = await cookies().get("token")?.value;
   console.log(token);
   if (!token) {
     return NextResponse.json(
@@ -17,6 +17,6 @@ export const GET = async (req, res) => {
   const verified = jwt.verify(token, process.env.JWT_SECRET);
 
   if (verified) {
-    return NextResponse.json(true);
+    return NextResponse.json({ login: true }, { status: 200 });
   }
 };

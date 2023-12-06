@@ -13,6 +13,7 @@ import {
   getproductdetails,
   deleteproduct,
 } from "@app/redux/features/admin/products/productSliceAd";
+import { getadminproducts } from "@app/redux/features/admin/products/productSliceAd";
 import MetaData from "@components/MetaData";
 import Loading from "@app/loading";
 import { Formik, Form, Field } from "formik";
@@ -108,7 +109,14 @@ const Page = (req, { params }) => {
 
             const res = await axios.post(
               `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
-              formData
+              formData,
+              {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                  "Access-Control-Allow-Origin": "https://shopinggo.vercel.app",
+                  "Access-Control-Allow-Credentials": "true",
+                },
+              }
             );
 
             return {
@@ -126,8 +134,9 @@ const Page = (req, { params }) => {
           description: values.description,
           images: uploadImages,
         };
-        dispatch(updateproduct({ productId, productdata }));
+        await dispatch(updateproduct({ productId, productdata }));
         router.push("/admin/products");
+        await dispatch(getadminproducts());
       } else {
         const productdata = {
           name: values.name,
@@ -137,8 +146,9 @@ const Page = (req, { params }) => {
           description: values.description,
           images: oldAllImages,
         };
-        dispatch(updateproduct({ productId, productdata }));
+        await dispatch(updateproduct({ productId, productdata }));
         router.push("/admin/products");
+        await dispatch(getadminproducts());
       }
     } catch (error) {
       console.log(error);
@@ -189,6 +199,7 @@ const Page = (req, { params }) => {
     await dispatch(deleteproduct(req.params.productId));
     await deleteCloudinaryImages(publicIds);
     router.push("/admin/products");
+    await dispatch(getadminproducts());
   };
 
   const deleteCloudinaryImages = async (publicIds) => {

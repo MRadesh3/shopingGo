@@ -65,12 +65,12 @@ const Register = () => {
     if (!avatar) {
       return toast.error("Please select an image");
     }
-    const formData = new FormData();
 
     console.log(avatar);
 
     try {
       if (avatar) {
+        const formData = new FormData();
         formData.append("file", avatar);
         const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
         const uploadPreset =
@@ -78,9 +78,21 @@ const Register = () => {
         formData.append("upload_preset", uploadPreset);
         const res = await axios.post(
           `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-          formData
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              "Access-Control-Allow-Origin": "https://shopinggo.vercel.app",
+              "Access-Control-Allow-Credentials": "true",
+            },
+          }
         );
         console.log(res.data);
+        res.setHeader(
+          "Access-Control-Allow-Origin",
+          "https://shopinggo.vercel.app"
+        );
+        res.setHeader("Access-Control-Allow-Credentials", "true");
 
         if (res.status == 200 || res.status == 201) {
           const userData = {
@@ -133,12 +145,10 @@ const Register = () => {
   useEffect(() => {
     if (isLoggedIn) {
       router.push("/");
+    } else {
+      dispatch(RESET_AUTH());
     }
-    if (isError) {
-      toast.error("User with this email already exists");
-    }
-    dispatch(RESET_AUTH());
-  }, [isLoggedIn, router, isError, dispatch]);
+  }, [isLoggedIn, router, dispatch]);
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);

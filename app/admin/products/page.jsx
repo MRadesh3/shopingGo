@@ -18,7 +18,10 @@ const Page = () => {
   const { products, isLoading } = useSelector((state) => state.productAd);
 
   useEffect(() => {
-    dispatch(getadminproducts());
+    async function fetchData() {
+      await dispatch(getadminproducts());
+    }
+    fetchData();
   }, [dispatch]);
 
   const columns = [

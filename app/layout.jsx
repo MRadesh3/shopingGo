@@ -13,8 +13,6 @@ export const metadata = {
     "ShopingGo is a simple e-commerce website built for your shopping needs.",
   icons: {
     icon: ["/favicon.ico?v=4"],
-    apple: ["/apple-touch-icon.png?v=4"],
-    shortcut: ["/apple-touch-icon.png"],
   },
 };
 

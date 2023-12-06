@@ -40,11 +40,10 @@ const Login = () => {
   useEffect(() => {
     if (isLoggedIn && isSuccess) {
       router.push("/");
+    } else {
+      dispatch(RESET_AUTH());
     }
-    if (isError) {
-      toast.error("Invalid Credentials");
-    }
-  }, [isError, isSuccess, isLoggedIn, router]);
+  }, [isSuccess, isLoggedIn, router]);
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
