@@ -1,3 +1,5 @@
+"use client";
+
 const VideoPlayer = () => {
   return (
     <section className="flex max-lg:flex-col gap-5 mx-3 mt-20 max-md:mt-10">

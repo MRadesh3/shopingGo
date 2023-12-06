@@ -1,3 +1,5 @@
+"use client";
+
 import { Backdrop, SpeedDial, SpeedDialAction } from "@mui/material";
 import Image from "next/image";
 import { useState } from "react";
