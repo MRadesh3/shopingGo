@@ -23,6 +23,7 @@ import AlertDialogBox from "@components/Alert";
 import { generateSHA1 } from "@functions/signature";
 import { generateSignature } from "@functions/signature";
 import axios from "axios";
+import { deletePhotoFromCloudinary } from "@actions/uploadActions";
 
 const Page = (req, { params }) => {
   const dispatch = useDispatch();
@@ -57,23 +58,8 @@ const Page = (req, { params }) => {
 
   const deleteUserHandler = async () => {
     const user = await dispatch(getuser(req.params.userId));
-    console.log(user.payload.user.avatar.public_id);
     const publicId = user && user.payload.user.avatar.public_id;
-    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-    const apiKey = process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY;
-    const apiSecret = process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET;
-    const timestamp = new Date().getTime();
-    const signature = generateSHA1(generateSignature(publicId, apiSecret));
-    const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/destroy`;
-
-    const response = await axios.post(url, {
-      public_id: publicId,
-      signature: signature,
-      api_key: apiKey,
-      timestamp: timestamp,
-    });
-    console.log(response);
-
+    deletePhotoFromCloudinary(publicId);
     await dispatch(deleteuser(req.params.userId));
     router.push("/admin/users");
   };

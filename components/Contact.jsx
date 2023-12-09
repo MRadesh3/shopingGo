@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { BsCartCheckFill } from "react-icons/bs";
 import { Formik, Form, Field } from "formik";
 import EmailIcon from "@mui/icons-material/Email";
@@ -47,10 +48,12 @@ const Contact = () => {
           electronics to home and lifestyle items, all designed to enhance your
           everyday life.
         </p>
-        <button className="bg-[#fe7f07] mt-6 max-xl:mb-4 text-md font-semibold text-white px-6 py-2 rounded-lg">
-          Shop Now
-          <BsCartCheckFill className="inline-block ml-1" />
-        </button>
+        <Link href="/products">
+          <button className="bg-[#fe7f07] mt-6 max-xl:mb-4 text-md font-semibold text-white px-6 py-2 rounded-lg">
+            Shop Now
+            <BsCartCheckFill className="inline-block ml-1" />
+          </button>
+        </Link>
       </div>
       <div className="flex flex-col shadow-2xl justify-center items-center px-5 py-10 w-full rounded-2xl">
         <h1 className="text-2xl text-[#4b077c] font-semibold mb-2">
@@ -59,7 +62,7 @@ const Contact = () => {
         <p className="mt-4 text-center text-slate-500 lg:max-w-xl">
           Receive products news and updates in your inbox
         </p>
-        <div className="w-full mt-4 p-10 rounded-xl">
+        <div className="w-full mt-4 p-10 max-md:p-3 rounded-xl">
           <Formik
             initialValues={initialValues}
             onSubmit={onSubmit}

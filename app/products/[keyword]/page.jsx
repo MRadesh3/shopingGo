@@ -163,14 +163,46 @@ const Page = (req, { params }) => {
                           height={100}
                           className="object-contain h-40 w-full"
                         />
-                        <p className="text-lg text-red-500 mt-4 mb-2 text-center">
-                          {`₹ ${product.price}`}
-                        </p>
-                        <h4 className="text-xl text-center text-[#4b077c] font-semibold ">
-                          {shortenText(product.name, 18)}
+                        {product.price > 5000 ? (
+                          <h1 className="text-[22px] items-baseline font-satoshi font-bold text-[#fe7f07] my-3">
+                            <div className="flex gap-5 justify-center items-center">
+                              {`₹ ${new Intl.NumberFormat("en-IN").format(
+                                offerPrice(product.price, 20)
+                              )}`}{" "}
+                              <p className="text-slate-500 line-through text-base font-light">{`₹ ${new Intl.NumberFormat(
+                                "en-In"
+                              ).format(product.price)}`}</p>{" "}
+                            </div>
+                            <p className="text-green-500 text-center text-lg">
+                              20 % Off
+                            </p>
+                          </h1>
+                        ) : (
+                          <h1 className="text-[22px] items-baseline gap-4 font-satoshi font-bold text-[#fe7f07] my-3">
+                            <div className="flex gap-5 justify-center items-center">
+                              {`₹ ${new Intl.NumberFormat("en-IN").format(
+                                offerPrice(product.price, 10)
+                              )}`}{" "}
+                              <p className="text-slate-500 line-through text-base font-light">{`₹ ${new Intl.NumberFormat(
+                                "en-In"
+                              ).format(product.price)}`}</p>{" "}
+                            </div>
+                            <p className="text-green-500 text-center text-lg">
+                              10 % Off
+                            </p>
+                          </h1>
+                        )}
+                        <h4 className="text-xl max-md:hidden text-center text-[#4b077c] font-semibold ">
+                          {shortenText(product.name, 16)}
                         </h4>
-                        <p className="mt-2 text-center text-slate-500">
-                          {shortenText(product.description, 26)}
+                        <h4 className="text-xl md:hidden text-center text-[#4b077c] font-semibold ">
+                          {shortenText(product.name, 25)}
+                        </h4>
+                        <p className="mt-2 text-center max-md:hidden text-slate-500">
+                          {shortenText(product.description, 24)}
+                        </p>
+                        <p className="mt-2 text-center md:hidden text-slate-500">
+                          {shortenText(product.description, 35)}
                         </p>
                         <div className="flex justify-center items-center gap-3">
                           <ReactStars

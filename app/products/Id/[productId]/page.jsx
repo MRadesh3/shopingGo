@@ -345,7 +345,7 @@ const ProductDetails = (req, { params }) => {
                     </div>
                   ))
                 ) : (
-                  <div className=" col-start-2 col-span-1 ">
+                  <div className=" col-start-2 col-span-1 max-lg:col-span-4">
                     <h1 className="text-lg text-center font-semibold">
                       No reviews yet ! Add a review
                     </h1>

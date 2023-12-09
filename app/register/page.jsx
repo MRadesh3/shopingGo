@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Formik, Form, Field } from "formik";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -10,9 +10,6 @@ import { toast } from "react-toastify";
 import { validateEmail } from "@constants";
 import { useDispatch, useSelector } from "react-redux";
 import { RESET_AUTH, register } from "@app/redux/features/auth/authSlice";
-import axios from "axios";
-import ImagePreview from "./ImagePreview";
-import Loading from "@app/loading";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import PersonIcon from "@mui/icons-material/Person";
@@ -21,9 +18,9 @@ import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import ImageIcon from "@mui/icons-material/Image";
 import MetaData from "@components/MetaData";
+import uploadPhoto from "@actions/uploadActions";
 
 const initialValues = {
-  avatar: "",
   name: "",
   email: "",
   password: "",
@@ -33,13 +30,22 @@ const initialValues = {
 const Register = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isPasswordVisible1, setIsPasswordVisible1] = useState(false);
-  const [avatar, setAvatar] = useState("");
-  const [avatarPreview, setAvatarPreview] = useState("/assets/icons/user.png");
+  const [avatar, setAvatar] = useState();
   const router = useRouter();
   const dispatch = useDispatch();
-  const { isLoading, isLoggedIn, isSuccess, isError } = useSelector(
-    (state) => state.auth
-  );
+  const formRef = useRef();
+  const { isLoggedIn } = useSelector((state) => state.auth);
+
+  const createUserImageChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file.size < 1024 * 1024 && file.type.startsWith("image/")) {
+      return setAvatar(file);
+    } else {
+      toast.error("Please select an image less than 1MB");
+      return setAvatar(null);
+    }
+  };
 
   const onSubmit = async (values, actions) => {
     console.log(values);
@@ -67,79 +73,29 @@ const Register = () => {
     }
 
     console.log(avatar);
+    const formData = new FormData();
+
+    formData.append("file", avatar);
+
+    const res = await uploadPhoto(formData);
 
     try {
-      if (avatar) {
-        const formData = new FormData();
-        formData.append("file", avatar);
-        const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-        const uploadPreset =
-          process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_USERS_PRESET_NAME;
-        formData.append("upload_preset", uploadPreset);
-        const res = await axios.post(
-          `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              "Access-Control-Allow-Origin": "https://shopinggo.vercel.app",
-              "Access-Control-Allow-Credentials": "true",
-            },
-          }
-        );
-        console.log(res.data);
-        res.setHeader(
-          "Access-Control-Allow-Origin",
-          "https://shopinggo.vercel.app"
-        );
-        res.setHeader("Access-Control-Allow-Credentials", "true");
+      const userData = {
+        avatar: {
+          public_id: res.public_id,
+          url: res.secure_url,
+        },
+        name: values.name,
+        email: values.email,
+        password: values.password,
+      };
 
-        if (res.status == 200 || res.status == 201) {
-          const userData = {
-            avatar: {
-              public_id: res.data.public_id,
-              url: res.data.secure_url,
-            },
-            name: values.name,
-            email: values.email,
-            password: values.password,
-          };
-
-          await dispatch(register(userData));
-        }
-      }
+      await dispatch(register(userData));
     } catch (error) {
       actions.resetForm();
       console.log(error);
-
       toast.error("Please refresh the page and try again");
     }
-  };
-
-  const createUserImageChange = (e) => {
-    const file = e.target.files[0];
-    setAvatarPreview();
-    setAvatar();
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      if (reader.readyState === 2) {
-        const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
-        if (!allowedTypes.includes(file.type)) {
-          toast.error("Invalid file type. Please select a valid image file.");
-          return;
-        }
-
-        const maxSize = 2000000;
-        if (file.size > maxSize) {
-          toast.error("File size is too large. Max size is 2MB");
-          return;
-        }
-
-        setAvatarPreview(reader.result);
-        setAvatar(reader.result);
-      }
-    };
-    reader.readAsDataURL(file);
   };
 
   useEffect(() => {
@@ -198,20 +154,23 @@ const Register = () => {
               initialValues={initialValues}
               validationSchema={signUpSchema}
               onSubmit={onSubmit}
+              innerRef={formRef}
             >
               {({ errors, touched, values, handleChange, isSubmitting }) => (
                 <Form>
                   <div className="flex justify-center items-center mb-5">
                     <div className="h-[100px] w-[100px] rounded-full">
-                      {avatarPreview && (
-                        <Image
-                          src={avatarPreview}
-                          width={60}
-                          height={60}
-                          alt="avatar"
-                          className="object-cover h-[100px] w-full rounded-full"
-                        />
-                      )}
+                      <Image
+                        src={
+                          avatar
+                            ? URL.createObjectURL(avatar)
+                            : "/assets/icons/user.png"
+                        }
+                        width={60}
+                        height={60}
+                        alt="avatar"
+                        className="object-cover h-[100px] w-full rounded-full"
+                      />
                     </div>
                   </div>
 
@@ -232,8 +191,8 @@ const Register = () => {
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:shadow-outline-lg focus:outline-none focus:ring-1 focus:ring-[#4b077c]"
                     />
                   </label>
-                  <div className="text-sm text-red-500 font-satoshi my-2 mx-2">
-                    {errors.avatar && touched.avatar && <p>{errors.avatar}</p>}
+                  <div className="text-sm text-green-500 font-satoshi my-2 mx-2">
+                    <p>Please select image less than 1 MB in size</p>
                   </div>
 
                   <label
@@ -345,7 +304,7 @@ const Register = () => {
                   <center>
                     <input
                       type="submit"
-                      value="Sign Up"
+                      value={isSubmitting ? " Signing Up ..." : "Sign Up"}
                       name="submit"
                       disabled={isSubmitting ? true : false}
                       className={

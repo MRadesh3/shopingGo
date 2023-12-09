@@ -3,7 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { BsCartCheckFill } from "react-icons/bs";
-import { BiSolidUserCircle } from "react-icons/bi";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { AiOutlineClose } from "react-icons/ai";
 import { useState } from "react";
@@ -43,7 +42,7 @@ const Navbar = () => {
 
   return (
     <header className="w-full fixed top-0 left-0 z-20 right-0 shadow-md ">
-      <nav className="w-full flex-between py-1 px-5 bg-gradient-to-r from-gray-100 to-gray-200">
+      <nav className="w-full flex-between py-1 px-5 bg-gradient-to-r pb-2 from-gray-100 to-gray-200">
         <div className="flex gap-3 md:gap-10">
           <Link
             href="/"
@@ -55,7 +54,7 @@ const Navbar = () => {
               width={180}
               height={50}
               alt="ShopingGo Logo"
-              className="object-contain"
+              className="object-contain max-md:w-[170px]"
             ></Image>
           </Link>
         </div>
@@ -87,12 +86,12 @@ const Navbar = () => {
         <div className="grid grid-cols-2 lg:pr-20 gap-4 md:gap-10">
           <Link
             href="/cart"
-            className={`flex gap-3 nav_text ${
+            className={`flex gap-3 items-center nav_text ${
               activeLink === 5 ? "active_link" : ""
             }`}
             onClick={() => activeLinkHandler(5)}
           >
-            <BsCartCheckFill className="h-6 w-6" />
+            <BsCartCheckFill className="h-8 w-8" />
             <span className="max-md:hidden">Cart</span>
             {cartItems.length > 0 ? (
               <span className="cart_count">{cartItems.length}</span>
@@ -101,13 +100,13 @@ const Navbar = () => {
             )}
           </Link>
           {isLoggedIn ? (
-            <div className="absolute max-lg:right-[50px]  right-20 top-4">
+            <div className="absolute max-lg:right-[65px]  right-20 top-4">
               {user && <UserOptions user={user} />}
             </div>
           ) : (
             <Link
               href="/login"
-              className={`flex gap-2 nav_text ${
+              className={`flex gap-2 justify-center items-center nav_text ${
                 activeLink === 3 ? "active_link" : ""
               }`}
               onClick={() => activeLinkHandler(3)}
@@ -115,8 +114,8 @@ const Navbar = () => {
               <span className="max-md:hidden">Login</span>
               <Image
                 src="/assets/icons/user.png"
-                width={30}
-                height={30}
+                width={45}
+                height={45}
                 className="rounded-full"
                 alt="profile"
               />
@@ -128,9 +127,9 @@ const Navbar = () => {
         <div className="sm:hidden max-sm:flex relative">
           <div onClick={toggleDropdownHandler}>
             {toggleDropdown ? (
-              <AiOutlineClose className="h-6 w-6" />
+              <AiOutlineClose className="h-8 w-8" />
             ) : (
-              <GiHamburgerMenu className="h-6 w-6" />
+              <GiHamburgerMenu className="h-8 w-8" />
             )}
           </div>
 
@@ -139,7 +138,7 @@ const Navbar = () => {
               {isLoggedIn ? (
                 <>
                   <p className="text-[#4b077c] font-satoshi font-semibold">
-                    Hi Welcome !
+                    Hi {user && user.user.name}
                   </p>
                   <Link
                     href="/myorders"

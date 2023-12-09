@@ -35,6 +35,9 @@ const Login = () => {
     };
 
     dispatch(login(userData));
+    setTimeout(() => {
+      actions.setSubmitting(false);
+    }, 3000);
   };
 
   useEffect(() => {
@@ -43,7 +46,7 @@ const Login = () => {
     } else {
       dispatch(RESET_AUTH());
     }
-  }, [isSuccess, isLoggedIn, router]);
+  }, [isSuccess, isLoggedIn, router, dispatch]);
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
@@ -155,7 +158,7 @@ const Login = () => {
                   <center>
                     <input
                       type="submit"
-                      value="Sign In"
+                      value={isSubmitting ? "Logging In..." : "Login"}
                       name="submit"
                       disabled={isSubmitting ? true : false}
                       className={

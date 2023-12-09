@@ -26,20 +26,23 @@ import { useRouter } from "next/navigation";
 import { generateSHA1 } from "@functions/signature";
 import { generateSignature } from "@functions/signature";
 import AlertDialogBox from "@components/Alert";
+import uploadProductPhotos, {
+  deleteProductPhotos,
+} from "@actions/productUploadAction";
 
 const categories = [
   "Mobiles",
   "Laptops",
   "Electronics",
-  "Clothing & Fashion",
-  "Home & Furniture",
-  "Beauty & Personal Care",
-  "Sports & Outdoors",
-  "Books, Movies & Music",
-  "Health & Wellness",
-  "Jewelry & Watches",
-  "Baby & Maternity",
-  "Travel & Luggage",
+  "Clothing / Fashion",
+  "Home / Furniture",
+  "Beauty / Personal Care",
+  "Sports / Outdoors",
+  "Books / Movies / Music",
+  "Health / Wellness",
+  "Jewellery / Watches",
+  "Baby / Maternity",
+  "Travel / Luggage",
 ];
 
 const Page = (req, { params }) => {
@@ -48,15 +51,65 @@ const Page = (req, { params }) => {
   const { isLoading, product } = useSelector((state) => state.productAd);
   const [allImages, setAllImages] = useState([]);
   const [oldAllImages, setOldAllImages] = useState([]);
-  const [allImagesPreview, setAllImagesPreview] = useState([]);
 
   useEffect(() => {
     if (product && product._id !== req.params.productId) {
       dispatch(getproductdetails(req.params.productId));
     } else {
-      setOldAllImages(product && product.images.map((image) => image));
+      setOldAllImages(
+        product &&
+          product.images.map((image, index) => ({ ...image, key: index }))
+      );
     }
   }, [dispatch, req.params.productId, product]);
+
+  console.log(oldAllImages);
+
+  const deleteProductHandler = async () => {
+    product &&
+      product.images.forEach((image, index) => {
+        deleteProductPhotos(image.public_id);
+      });
+
+    try {
+      const productId = req.params.productId;
+      await dispatch(deleteproduct(productId));
+      router.push("/admin/products");
+    } catch (error) {
+      console.log(error);
+      return toast.error("Something went wrong");
+    }
+  };
+
+  const handlePrevDeleteFiles = async (publicId) => {
+    const resDelete = await deleteProductPhotos(publicId);
+    console.log(resDelete);
+    const newImages = oldAllImages.filter(
+      (image) => image.public_id !== publicId
+    );
+    console.log(newImages);
+    setOldAllImages(newImages);
+  };
+
+  const updateProductImagesChange = (e) => {
+    const files = e.target.files;
+    console.log(files);
+
+    const newFiles = [...files].filter((file) => {
+      if (file.size < 1024 * 1024 && file.type.startsWith("image/")) {
+        return file;
+      } else {
+        toast.error(`${file.name} has invalid file size or type`);
+      }
+    });
+
+    setAllImages((prev) => (prev ? [...prev, ...newFiles] : [...newFiles]));
+  };
+
+  const handleDeleteFiles = (index) => {
+    const newFiles = allImages.filter((_, i) => i !== index);
+    setAllImages(newFiles);
+  };
 
   const initialValues = {
     name: product && product.name,
@@ -70,156 +123,43 @@ const Page = (req, { params }) => {
   const onSubmit = async (values, actions) => {
     console.log(values);
     const productId = req.params.productId;
-    console.log(productId);
+
+    const formData = new FormData();
+
+    allImages.forEach((image) => {
+      formData.append(`files`, image);
+    });
+
+    const res = await uploadProductPhotos(formData);
+    console.log(res);
+
+    const productImages = res.map((image) => ({
+      key: image.public_id,
+      public_id: image.public_id,
+      url: image.url,
+    }));
+
+    const newAllProductImages = [...oldAllImages, ...productImages];
+
+    if (newAllProductImages.length < 1) {
+      toast.error("Please add atleast one image");
+      return;
+    }
 
     try {
-      if (allImages && allImages.length > 0) {
-        product &&
-          product.images.forEach(async (image) => {
-            const publicId = image.public_id;
-            const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-            const apiKey = process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY;
-            const apiSecret = process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET;
-            const timestamp = new Date().getTime();
-            const signature = generateSHA1(
-              generateSignature(publicId, apiSecret)
-            );
-            const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/destroy`;
-
-            const response = await axios.post(url, {
-              public_id: publicId,
-              signature: signature,
-              api_key: apiKey,
-              timestamp: timestamp,
-            });
-            console.log(response);
-
-            console.log("Before Image Upload");
-          });
-
-        const formData = new FormData();
-
-        const uploadImages = await Promise.all(
-          allImages.map(async (image, index) => {
-            formData.append(`file`, image);
-            formData.append(
-              "upload_preset",
-              process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRODUCTS_PRESET_NAME
-            );
-
-            const res = await axios.post(
-              `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
-              formData,
-              {
-                headers: {
-                  "Content-Type": "multipart/form-data",
-                  "Access-Control-Allow-Origin": "https://shopinggo.vercel.app",
-                  "Access-Control-Allow-Credentials": "true",
-                },
-              }
-            );
-
-            return {
-              public_id: res.data.public_id,
-              url: res.data.secure_url,
-            };
-          })
-        );
-        console.log(uploadImages);
-        const productdata = {
-          name: values.name,
-          price: values.price,
-          stock: values.stock,
-          category: values.category,
-          description: values.description,
-          images: uploadImages,
-        };
-        await dispatch(updateproduct({ productId, productdata }));
-        router.push("/admin/products");
-        await dispatch(getadminproducts());
-      } else {
-        const productdata = {
-          name: values.name,
-          price: values.price,
-          stock: values.stock,
-          category: values.category,
-          description: values.description,
-          images: oldAllImages,
-        };
-        await dispatch(updateproduct({ productId, productdata }));
-        router.push("/admin/products");
-        await dispatch(getadminproducts());
-      }
+      const productdata = {
+        name: values.name,
+        price: values.price,
+        stock: values.stock,
+        category: values.category,
+        description: values.description,
+        images: newAllProductImages,
+      };
+      await dispatch(updateproduct({ productId, productdata }));
+      router.push("/admin/products");
     } catch (error) {
       console.log(error);
       return toast.error("Something went wrong");
-    }
-  };
-
-  const updateProductImagesChange = (e) => {
-    const files = Array.from(e.target.files);
-
-    setAllImages([]);
-    setAllImagesPreview([]);
-    setOldAllImages([]);
-
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (reader.readyState === 2) {
-          const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
-          if (!allowedTypes.includes(file.type)) {
-            toast.error("Invalid file type. Please select a valid image file.");
-            return;
-          }
-
-          const maxSize = 2000000;
-          if (file.size > maxSize) {
-            toast.error("File size is too large. Max size is 2MB");
-            return;
-          }
-          setAllImagesPreview((old) => [...old, reader.result]);
-          setAllImages((old) => [...old, reader.result]);
-        }
-      };
-
-      reader.readAsDataURL(file);
-    });
-  };
-
-  const deleteProductHandler = async () => {
-    const product = await dispatch(getproductdetails(req.params.productId));
-    console.log(product.payload.product.images);
-    const publicIds =
-      product.payload.product.images &&
-      product.payload.product.images.map((image) => {
-        return image.public_id;
-      });
-    console.log(publicIds);
-    await dispatch(deleteproduct(req.params.productId));
-    await deleteCloudinaryImages(publicIds);
-    router.push("/admin/products");
-    await dispatch(getadminproducts());
-  };
-
-  const deleteCloudinaryImages = async (publicIds) => {
-    for (const publicId of publicIds) {
-      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-      const apiKey = process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY;
-      const apiSecret = process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET;
-      const timestamp = new Date().getTime();
-      const signature = generateSHA1(generateSignature(publicId, apiSecret));
-      const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/destroy`;
-
-      const response = await axios.post(url, {
-        public_id: publicId,
-        signature: signature,
-        api_key: apiKey,
-        timestamp: timestamp,
-      });
-      console.log(response);
-
-      console.log("Before Image Upload");
     }
   };
 
@@ -331,7 +271,10 @@ const Page = (req, { params }) => {
                               <option value="">Select Product Category</option>
                               {categories &&
                                 categories.map((item) => (
-                                  <option key={item} value={item}>
+                                  <option
+                                    key={item}
+                                    value={item.replace(/ /g, "")}
+                                  >
                                     {item}
                                   </option>
                                 ))}
@@ -417,10 +360,10 @@ const Page = (req, { params }) => {
                               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:shadow-outline-lg focus:outline-none focus:ring-1 focus:ring-[#4b077c]"
                             />
                           </label>
-                          <div className="text-sm text-red-500 font-satoshi my-2 mx-2">
-                            {errors.avatar && touched.avatar && (
-                              <p>{errors.avatar}</p>
-                            )}
+                          <div className="text-sm text-green-500 font-satoshi my-2 mx-2">
+                            <p>
+                              All product images must be less than 1 MB in size
+                            </p>
                           </div>
                         </div>
 
@@ -432,48 +375,38 @@ const Page = (req, { params }) => {
                             <hr className="h-[1.5px] my-3  w-[30%] bg-gray-200 border-0 rounded dark:bg-gray-300" />
                           </center>
                           <div className="grid grid-cols-4 gap-5">
-                            <h1 className="col-span-4 my-3 text-base text-[#4b077c] font-semibold font-satosh">
-                              Old Images
-                            </h1>
-                            {oldAllImages &&
-                              oldAllImages.map((image, index) => (
-                                <Image
+                            {allImages &&
+                              allImages.map((image, index) => (
+                                <div
                                   key={index}
-                                  src={image.url}
-                                  w
-                                  alt="Image Preview"
-                                  width={200}
-                                  height={200}
-                                  className="object-cover h-[250px] w-full max-md:col-span-4 rounded-lg"
-                                />
-                              ))}
-                          </div>
-                          <div className="grid grid-cols-4 gap-5">
-                            {allImagesPreview && (
-                              <>
-                                {" "}
-                                <h1 className="col-span-4 my-4 text-base text-[#4b077c] font-semibold font-satosh">
-                                  New Images
-                                </h1>
-                                {allImagesPreview.map((image, index) => (
+                                  className="flex flex-col justify-center items-center gap-5"
+                                >
                                   <Image
-                                    key={index}
-                                    src={image}
+                                    src={image && URL.createObjectURL(image)}
                                     alt="Image Preview"
                                     width={200}
                                     height={200}
-                                    className="object-cover h-[250px] w-full max-md:col-span-4 rounded-lg"
+                                    className="object-fill h-[100px] w-full max-md:col-span-4 rounded-lg"
                                   />
-                                ))}
-                              </>
-                            )}
+                                  <button
+                                    onClick={() => handleDeleteFiles(index)}
+                                    className="px-2 py-1 bg-red-500 text-white rounded-xl w-full"
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
+                              ))}
                           </div>
                         </div>
                       </div>
                       <center>
                         <input
                           type="submit"
-                          value="Update Product"
+                          value={
+                            isSubmitting
+                              ? "Updating Product ..."
+                              : "Update Product"
+                          }
                           name="submit"
                           disabled={isSubmitting ? true : false}
                           className={
@@ -487,7 +420,35 @@ const Page = (req, { params }) => {
                   )}
                 </Formik>
               </div>
-              <div className="mt-10 flex justify-end">
+              <div>
+                <div className="grid grid-cols-4 gap-5">
+                  <h1 className="col-span-4 my-3 text-base text-[#4b077c] font-semibold font-satosh">
+                    Old Images
+                  </h1>
+                  {oldAllImages &&
+                    oldAllImages.map((image, index) => (
+                      <div
+                        key={index}
+                        className="flex flex-col justify-center items-center gap-5"
+                      >
+                        <Image
+                          src={image.url}
+                          alt="Image Preview"
+                          width={200}
+                          height={200}
+                          className="object-fill h-[100px] w-full max-md:col-span-4 rounded-lg"
+                        />
+                        <button
+                          onClick={() => handlePrevDeleteFiles(image.public_id)}
+                          className="px-2 py-1 bg-red-500 text-white rounded-xl w-full"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    ))}
+                </div>
+              </div>
+              <div className="mt-10 flex justify-center">
                 <AlertDialogBox
                   deleteHandler={deleteProductHandler}
                   type={`product : ${product && product._id}`}

@@ -17,7 +17,7 @@ import VideoPlayer from "@components/VideoPlayer";
 
 const PageHeading = ({ headingText, buttonText }) => {
   return (
-    <div className="max-md:mx-2 lg:pb-2 lg:border-b-2  border-b-gray-300 mx-20 max-md:flex-col mt-[100px] mb-10 flex justify-between items-center">
+    <div className="max-md:mx-2 lg:pb-2 lg:border-b-2  border-b-gray-300 mx-20 max-md:flex-col mt-[100px] max-md:mt-[70px] mb-10 flex justify-between items-center">
       <h1 className="text-3xl max-md:text-2xl max-md:mb-2 text-[#4b077c] font-bold">
         {headingText}
       </h1>

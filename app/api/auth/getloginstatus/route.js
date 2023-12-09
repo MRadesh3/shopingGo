@@ -9,6 +9,7 @@ export const GET = async (req, res) => {
   console.log(token);
   if (!token) {
     return NextResponse.json(
+      { login: false },
       { message: "Not authorized, Please Login" },
       { status: 401 }
     );
@@ -17,6 +18,10 @@ export const GET = async (req, res) => {
   const verified = jwt.verify(token, process.env.JWT_SECRET);
 
   if (verified) {
-    return NextResponse.json({ login: true }, { status: 200 });
+    return NextResponse.json(
+      { login: true },
+      { message: "Logged In" },
+      { status: 200 }
+    );
   }
 };

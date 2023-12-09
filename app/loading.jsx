@@ -1,5 +1,4 @@
 import Image from "next/image";
-
 export default function Loading() {
   return (
     <section className="md:mt-[140px] mt-[120px] h-[100vh]">

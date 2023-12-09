@@ -18,6 +18,7 @@ import { createProductSchema } from "@models/signUpSchema";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import uploadProductPhotos from "@actions/productUploadAction";
 
 const categories = [
   "Mobiles",
@@ -40,43 +41,59 @@ const initialValues = {
   stock: "",
   category: "",
   description: "",
-  images: "",
 };
 
 const Page = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { isLoading } = useSelector((state) => state.productAd);
-  const [allImages, setAllImages] = useState([]);
-  const [allImagesPreview, setAllImagesPreview] = useState([]);
+  const [allImages, setAllImages] = useState();
+
+  const createProductImagesChange = (e) => {
+    const files = e.target.files;
+    console.log(files);
+
+    const newFiles = [...files].filter((file) => {
+      if (file.size < 1024 * 1024 && file.type.startsWith("image/")) {
+        return file;
+      } else {
+        toast.error(`${file.name} has invalid size or type`);
+      }
+    });
+
+    setAllImages((prev) => (prev ? [...prev, ...newFiles] : [...newFiles]));
+  };
+
+  const handleDeleteFiles = (index) => {
+    const newFiles = allImages.filter((_, i) => i !== index);
+    setAllImages(newFiles);
+  };
+
+  console.log(allImages);
 
   const onSubmit = async (values, actions) => {
     console.log(values);
 
+    if (!allImages) {
+      return toast.error("Please upload atleast one product image");
+    }
+
     const formData = new FormData();
 
+    allImages.forEach((image) => {
+      formData.append("files", image);
+    });
+
+    const res = await uploadProductPhotos(formData);
+    console.log(res);
+
     try {
-      const uploadImages = await Promise.all(
-        allImages.map(async (image, index) => {
-          formData.append(`file`, image);
-          formData.append(
-            "upload_preset",
-            process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRODUCTS_PRESET_NAME
-          );
+      const uploadImages = res.map((image, index) => ({
+        key: index,
+        public_id: image.public_id,
+        url: image.url,
+      }));
 
-          const res = await axios.post(
-            `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
-            formData
-          );
-
-          return {
-            public_id: res.data.public_id,
-            url: res.data.secure_url,
-          };
-        })
-      );
-
-      console.log(uploadImages);
       const productdata = {
         name: values.name,
         price: values.price,
@@ -86,41 +103,11 @@ const Page = () => {
         images: uploadImages,
       };
       dispatch(createnewproduct(productdata));
-      router.push("/admin/dashboard");
+      router.push("/admin/products");
     } catch (error) {
       console.log(error);
       return toast.error("Something went wrong");
     }
-  };
-
-  const createProductImagesChange = (e) => {
-    const files = Array.from(e.target.files);
-
-    setAllImages([]);
-    setAllImagesPreview([]);
-
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (reader.readyState === 2) {
-          const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
-          if (!allowedTypes.includes(file.type)) {
-            toast.error("Invalid file type. Please select a valid image file.");
-            return;
-          }
-
-          const maxSize = 2000000;
-          if (file.size > maxSize) {
-            toast.error("File size is too large. Max size is 2MB");
-            return;
-          }
-          setAllImagesPreview((old) => [...old, reader.result]);
-          setAllImages((old) => [...old, reader.result]);
-        }
-      };
-
-      reader.readAsDataURL(file);
-    });
   };
 
   return (
@@ -229,9 +216,9 @@ const Page = () => {
                             >
                               <option value="">Select Product Category</option>
                               {categories &&
-                                categories.map((item) => (
+                                categories.map((item, index) => (
                                   <option
-                                    key={item}
+                                    key={index}
                                     value={item.replace(/ /g, "")}
                                   >
                                     {item}
@@ -316,16 +303,13 @@ const Page = () => {
                               id="avatar"
                               accept="image/*"
                               onChange={createProductImagesChange}
-                              //   onChange={(e) =>
-                              //     setAvatar(Array.from(e.target.files))
-                              //   }
                               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:shadow-outline-lg focus:outline-none focus:ring-1 focus:ring-[#4b077c]"
                             />
                           </label>
-                          <div className="text-sm text-red-500 font-satoshi my-2 mx-2">
-                            {errors.avatar && touched.avatar && (
-                              <p>{errors.avatar}</p>
-                            )}
+                          <div className="text-sm text-green-500 font-satoshi my-2 mx-2">
+                            <p>
+                              All product images must be less than 1 MB in size
+                            </p>
                           </div>
                         </div>
 
@@ -337,16 +321,26 @@ const Page = () => {
                             <hr className="h-[1.5px] my-3  w-[30%] bg-gray-200 border-0 rounded dark:bg-gray-300" />
                           </center>
                           <div className="grid grid-cols-4 gap-5">
-                            {allImagesPreview &&
-                              allImagesPreview.map((image, index) => (
-                                <Image
+                            {allImages &&
+                              allImages.map((image, index) => (
+                                <div
                                   key={index}
-                                  src={image}
-                                  alt="Image Preview"
-                                  width={200}
-                                  height={200}
-                                  className="object-cover h-[250px] w-full max-md:col-span-4 rounded-lg"
-                                />
+                                  className="flex flex-col justify-center items-center gap-5"
+                                >
+                                  <Image
+                                    src={image && URL.createObjectURL(image)}
+                                    alt="Image Preview"
+                                    width={200}
+                                    height={200}
+                                    className="object-fill h-[100px] w-full max-md:col-span-4 rounded-lg"
+                                  />
+                                  <button
+                                    onClick={() => handleDeleteFiles(index)}
+                                    className="px-2 py-1 bg-red-500 text-white rounded-xl w-full"
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
                               ))}
                           </div>
                         </div>
@@ -354,7 +348,11 @@ const Page = () => {
                       <center>
                         <input
                           type="submit"
-                          value="Create Product"
+                          value={
+                            isSubmitting
+                              ? "Creating Product..."
+                              : "Create Product"
+                          }
                           name="submit"
                           disabled={isSubmitting ? true : false}
                           className={

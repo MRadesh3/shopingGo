@@ -31,6 +31,7 @@ const Page = () => {
 
   return (
     <section className="md:mt-20 mt-[80px] mb-20">
+      <MetaData title={`${user && user.user.name}'s Profile`} />
       {isLoading ? (
         <Loading />
       ) : (
@@ -44,7 +45,6 @@ const Page = () => {
           <div className="grid grid-cols-4 gap-10 mt-10 mx-[120px] max-lg:mx-10 max-md:mx-5">
             {user && (
               <>
-                <MetaData title={`${user.user.name}'s Profile`} />
                 <div className="col-span-2 max-lg:col-start-2 max-lg:col-end-4 max-md:col-span-4 flex flex-col justify-center items-center p-10 rounded-2xl shadow-xl">
                   <Image
                     src={

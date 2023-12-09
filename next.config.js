@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
-
+  experimental: {},
   images: {
     domains: [
       "res.cloudinary.com",

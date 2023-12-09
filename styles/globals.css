@@ -33,13 +33,13 @@
     @apply text-base font-satoshi font-semibold text-gray-800 hover:text-red-500
   }
   .dropdown {
-    @apply absolute right-1 top-full mt-7 w-full p-10 rounded-lg bg-white min-w-[390px] flex flex-col gap-3 justify-start items-start;
+    @apply absolute right-[1px] top-full mt-7 w-full pl-[100px] py-10 rounded-lg bg-white min-w-[390px] flex flex-col gap-3 justify-start items-start;
   }
   .active_link{
     @apply text-orange-500 underline-offset-1 underline;
   }
   .cart_count{
-    @apply absolute bg-red-500 text-white text-xs rounded-full mt-[-5px] ml-5 px-[5px] py-[0.5px]
+    @apply absolute bg-red-500 text-white text-xs rounded-full mt-[-23px] ml-6 px-[5px] py-[0.5px]
   }
 .swiperSlide{
   @apply flex justify-center items-center flex-col 

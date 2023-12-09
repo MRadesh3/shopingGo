@@ -77,7 +77,7 @@ const MobilesCarousel = () => {
                         alt={product.name}
                         width={400}
                         height={100}
-                        className="object-contain h-40 w-full"
+                        className="object-contain h-40 w-full mb-8"
                       />
                       {product.price > 5000 ? (
                         <h1 className="text-[22px] items-baseline font-satoshi font-bold text-[#fe7f07] my-3">
@@ -108,11 +108,17 @@ const MobilesCarousel = () => {
                           </p>
                         </h1>
                       )}
-                      <h4 className="text-xl text-center text-[#4b077c] font-semibold ">
+                      <h4 className="text-xl max-md:hidden text-center text-[#4b077c] font-semibold ">
                         {shortenText(product.name, 16)}
                       </h4>
-                      <p className="mt-2 text-center text-slate-500">
+                      <h4 className="text-xl md:hidden text-center text-[#4b077c] font-semibold ">
+                        {shortenText(product.name, 25)}
+                      </h4>
+                      <p className="mt-2 text-center max-md:hidden text-slate-500">
                         {shortenText(product.description, 24)}
+                      </p>
+                      <p className="mt-2 text-center md:hidden text-slate-500">
+                        {shortenText(product.description, 35)}
                       </p>
                       <div className="flex justify-center items-center gap-3 my-3">
                         <Rating
