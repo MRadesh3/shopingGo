@@ -14,6 +14,7 @@ cloudinary.config({
 
 async function savePhotosToLocal(formData) {
   const file = formData.get("file");
+  console.log(file);
 
   const singleBufferPromise = file.arrayBuffer().then((data) => {
     const buffer = Buffer.from(data);
@@ -23,7 +24,6 @@ async function savePhotosToLocal(formData) {
     const tempDir = os.tmpdir();
 
     const uploadDir = path.join(tempDir, `/${name}.${ext}`);
-    console.log(uploadDir);
     fs.writeFile(uploadDir, buffer);
 
     return { filepath: uploadDir, filename: file.name };

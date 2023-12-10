@@ -38,12 +38,13 @@ const Register = () => {
 
   const createUserImageChange = (e) => {
     const file = e.target.files[0];
+    console.log(file);
 
-    if (file.size < 1024 * 1024 && file.type.startsWith("image/")) {
-      return setAvatar(file);
+    if (file.size < 1024 * 1024 * 2 && file.type.startsWith("image")) {
+      setAvatar(file);
     } else {
-      toast.error("Please select an image less than 1MB");
-      return setAvatar(null);
+      toast.error(`${file.name} has invalid file size or type`);
+      setAvatar(null);
     }
   };
 
@@ -79,7 +80,6 @@ const Register = () => {
 
     const res = await uploadPhoto(formData);
     console.log(res);
-
     try {
       const userData = {
         avatar: {

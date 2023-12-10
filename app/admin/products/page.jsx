@@ -19,7 +19,7 @@ const Page = () => {
 
   useEffect(() => {
     dispatch(getadminproducts());
-  }, [dispatch]);
+  }, [dispatch, router.asPath]);
 
   const columns = [
     {

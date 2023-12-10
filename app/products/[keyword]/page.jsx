@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import ReactStars from "react-rating-stars-component";
-import { shortenText } from "@functions";
+import { offerPrice, shortenText } from "@functions";
 import { useDispatch, useSelector } from "react-redux";
 import {
   RESET_PRODUCT_STATE,
