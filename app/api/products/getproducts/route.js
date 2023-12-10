@@ -20,7 +20,7 @@ export const GET = async (req, res, next) => {
 
     const totalProductCount = await countQuery.query.countDocuments();
 
-    const resultPerPage = 6;
+    const resultPerPage = 12;
     const apiFeature = new ApiFeatures(Product.find(), searchParamsObj)
       .search()
       .filter()

@@ -15,8 +15,8 @@
   }
 
   .sliderHeading{
-    -webkit-text-stroke-width: 2px;
-    -webkit-text-stroke-color: #4b077c;
+    color: white;
+    text-shadow: 0px 2px 4px red;
   }
 
 

@@ -141,7 +141,7 @@ const Navbar = () => {
                     Hi {user && user.user.name}
                   </p>
                   <Link
-                    href="/myorders"
+                    href="/profile/myorders"
                     className="nav_text"
                     onClick={() => setToggleDropdown(false)}
                   >

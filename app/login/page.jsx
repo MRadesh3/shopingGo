@@ -35,9 +35,6 @@ const Login = () => {
     };
 
     dispatch(login(userData));
-    setTimeout(() => {
-      actions.setSubmitting(false);
-    }, 3000);
   };
 
   useEffect(() => {

@@ -26,14 +26,14 @@ async function savePhotosToLocal(formData) {
     console.log(uploadDir);
     fs.writeFile(uploadDir, buffer);
 
-    return { filePath: uploadDir, fileName: file.name };
+    return { filepath: uploadDir, filename: file.name };
   });
 
   return await singleBufferPromise;
 }
 
 async function uploadPhotosToCloudinary(newFile) {
-  const singlePhotoPromise = cloudinary.v2.uploader.upload(newFile.filePath, {
+  const singlePhotoPromise = cloudinary.v2.uploader.upload(newFile.filepath, {
     folder: "ShopingGo_customers",
   });
 
@@ -51,7 +51,7 @@ const uploadPhoto = async (formData) => {
 
     const photo = await uploadPhotosToCloudinary(newFile);
 
-    fs.unlink(newFile.filePath);
+    fs.unlink(newFile.filepath);
 
     await delay(2000);
 

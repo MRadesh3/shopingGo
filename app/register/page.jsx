@@ -78,6 +78,7 @@ const Register = () => {
     formData.append("file", avatar);
 
     const res = await uploadPhoto(formData);
+    console.log(res);
 
     try {
       const userData = {

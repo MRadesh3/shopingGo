@@ -31,6 +31,7 @@ const UserOptions = ({ user }) => {
   const logoutuser = () => {
     localStorage.removeItem("token");
     dispatch(logout());
+    router.push("/");
   };
 
   const options = [

@@ -15,22 +15,22 @@ export const sliderData = [
   {
     imageURL: "/assets/images/fashion.webp",
     heading: "Fashion & Styling",
-    desc: "Upto 30% Off on all the premium brands and products",
+    desc: "Upto 35% Off on all the premium brands and products",
   },
   {
     imageURL: "/assets/images/electronic.jpg",
     heading: "Electronics & Gadgets",
-    desc: "Upto 30% Off on all the premium brands and products",
+    desc: "Upto 30% Off on all the premium electronics brands and unique products",
   },
   {
     imageURL: "/assets/images/shoes.jpg",
     heading: "Shoes & Footwear",
-    desc: "Upto 30% Off on all the premium brands and products",
+    desc: "Upto 50% Off on all the premium shoes brands and products",
   },
   {
     imageURL: "/assets/images/cart.jpg",
     heading: "Get everything you need",
-    desc: "Upto 30% Off on all the premium brands and products",
+    desc: "Avail the best offers and discounts on all the products",
   },
 ];
 
