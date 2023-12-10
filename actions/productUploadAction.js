@@ -17,7 +17,8 @@ async function saveProductPhotosToLocal(formData) {
 
   const multipleBuffersPromise = files.map((file) =>
     file.arrayBuffer().then((data) => {
-      const buffer = Buffer.from(data);
+      const buffer = Buffer.alloc(data.byteLength);
+      Buffer.from(data).copy(buffer);
       const name = uuidv4();
       const ext = file.type.split("/")[1];
 
