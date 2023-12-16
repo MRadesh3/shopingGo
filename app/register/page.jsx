@@ -18,7 +18,8 @@ import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import ImageIcon from "@mui/icons-material/Image";
 import MetaData from "@components/MetaData";
-import uploadPhoto from "@actions/uploadActions";
+import uploadPhoto, { uploadFile, uploadImage } from "@actions/uploadActions";
+import axios from "axios";
 
 const initialValues = {
   name: "",
@@ -31,6 +32,7 @@ const Register = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isPasswordVisible1, setIsPasswordVisible1] = useState(false);
   const [avatar, setAvatar] = useState();
+  const [previewImage, setPreviewImage] = useState("");
   const router = useRouter();
   const dispatch = useDispatch();
   const formRef = useRef();
@@ -43,7 +45,9 @@ const Register = () => {
     if (file.size < 1024 * 1024 * 2 && file.type.startsWith("image")) {
       setAvatar(file);
     } else {
-      toast.error(`${file.name} has invalid file size or type`);
+      toast.error(
+        `${file.name} has invalid file size greater than 2MB or type`
+      );
       setAvatar(null);
     }
   };
@@ -75,11 +79,10 @@ const Register = () => {
 
     console.log(avatar);
     const formData = new FormData();
-
     formData.append("file", avatar);
-
     const res = await uploadPhoto(formData);
     console.log(res);
+
     try {
       const userData = {
         avatar: {

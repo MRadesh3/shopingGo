@@ -47,29 +47,51 @@ const Page = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { isLoading } = useSelector((state) => state.productAd);
-  const [allImages, setAllImages] = useState();
+  const [allImages, setAllImages] = useState([]);
 
   const createProductImagesChange = (e) => {
     const files = e.target.files;
     console.log(files);
 
-    const newFiles = [...files].filter((file) => {
-      if (file.size < 1024 * 1024 && file.type.startsWith("image/")) {
-        return file;
-      } else {
-        toast.error(`${file.name} has invalid size or type`);
-      }
+    const promises = [...files].map((file) => {
+      return new Promise((resolve, reject) => {
+        if (file.size < 1024 * 1024 && file.type.startsWith("image/")) {
+          const reader = new FileReader();
+
+          reader.onloadend = () => {
+            resolve(reader.result);
+          };
+
+          reader.onerror = (error) => {
+            reject(error);
+          };
+
+          reader.readAsDataURL(file);
+        } else {
+          toast.error(
+            `${file.name} has an invalid size greater than 1MB or type`
+          );
+          reject(`${file.name} has an invalid size or type`);
+        }
+      });
     });
 
-    setAllImages((prev) => (prev ? [...prev, ...newFiles] : [...newFiles]));
+    Promise.all(promises)
+      .then((results) => {
+        const validImages = results.filter((result) => result !== undefined);
+        setAllImages((prevImages) => [...prevImages, ...validImages]);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
+
+  console.log(allImages);
 
   const handleDeleteFiles = (index) => {
     const newFiles = allImages.filter((_, i) => i !== index);
     setAllImages(newFiles);
   };
-
-  console.log(allImages);
 
   const onSubmit = async (values, actions) => {
     console.log(values);
@@ -78,32 +100,25 @@ const Page = () => {
       return toast.error("Please upload atleast one product image");
     }
 
-    const formData = new FormData();
-
-    allImages.forEach((image) => {
-      formData.append("files", image);
-    });
-
-    const res = await uploadProductPhotos(formData);
+    const res = await uploadProductPhotos(allImages);
     console.log(res);
 
     try {
-      const uploadImages = res.map((image, index) => ({
-        key: index,
-        public_id: image.public_id,
-        url: image.url,
-      }));
-
-      const productdata = {
-        name: values.name,
-        price: values.price,
-        stock: values.stock,
-        category: values.category,
-        description: values.description,
-        images: uploadImages,
-      };
-      dispatch(createnewproduct(productdata));
-      router.push("/admin/products");
+      // const uploadImages = res.map((image, index) => ({
+      //   key: index,
+      //   public_id: image.public_id,
+      //   url: image.url,
+      // }));
+      // const productdata = {
+      //   name: values.name,
+      //   price: values.price,
+      //   stock: values.stock,
+      //   category: values.category,
+      //   description: values.description,
+      //   images: uploadImages,
+      // };
+      // dispatch(createnewproduct(productdata));
+      // router.push("/admin/products");
     } catch (error) {
       console.log(error);
       return toast.error("Something went wrong");
@@ -321,14 +336,14 @@ const Page = () => {
                             <hr className="h-[1.5px] my-3  w-[30%] bg-gray-200 border-0 rounded dark:bg-gray-300" />
                           </center>
                           <div className="grid grid-cols-4 gap-5">
-                            {allImages &&
+                            {allImages.map &&
                               allImages.map((image, index) => (
                                 <div
                                   key={index}
                                   className="flex flex-col justify-center items-center gap-5"
                                 >
                                   <Image
-                                    src={image && URL.createObjectURL(image)}
+                                    src={image}
                                     alt="Image Preview"
                                     width={200}
                                     height={200}
