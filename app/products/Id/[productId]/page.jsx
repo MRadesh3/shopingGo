@@ -92,11 +92,11 @@ const ProductDetails = (req, { params }) => {
         <Loading />
       ) : (
         <section>
-          <section className=" md:mt-[100px] mt-[100px] justify-center flex max-md:flex-col gap-8 max-md:gap-1">
+          <section className=" md:mt-[100px] mt-[100px] justify-center mx-5 max-md:mr-5 flex max-lg:flex-col gap-8 max-md:gap-1">
             {isSuccess && product ? (
               <>
                 <MetaData title={`${product.name}`} />
-                <div className="md:w-1/2 p-4 max-md:w-full max-md:px-2 px-10 max-md:5">
+                <div className="lg:w-1/2 p-4 max-md:w-full max-md:px-2 px-10 max-md:5">
                   <Swiper
                     spaceBetween={30}
                     pagination={{
@@ -126,10 +126,10 @@ const ProductDetails = (req, { params }) => {
                     ))}
                   </Swiper>
                 </div>
-                <div className="md:w-1/2 p-4 flex flex-col justify-center max-md:ml-5">
+                <div className="lg:w-1/2 p-4 flex flex-col justify-center ">
                   <div className="">
                     <div className="my-2">
-                      <h1 className="text-xl font-satoshi font-bold text-[#4b077c] mb-1">
+                      <h1 className="text-xl text-justify font-satoshi font-bold text-[#4b077c] mb-1">
                         {product.name}
                       </h1>
                       <p className="text-slate-500 text-md">
