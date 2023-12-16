@@ -18,8 +18,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import ImageIcon from "@mui/icons-material/Image";
 import MetaData from "@components/MetaData";
-import uploadPhoto, { uploadFile, uploadImage } from "@actions/uploadActions";
-import axios from "axios";
+import uploadPhoto from "@actions/uploadActions";
 
 const initialValues = {
   name: "",
@@ -32,25 +31,22 @@ const Register = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isPasswordVisible1, setIsPasswordVisible1] = useState(false);
   const [avatar, setAvatar] = useState();
-  const [previewImage, setPreviewImage] = useState("");
   const router = useRouter();
   const dispatch = useDispatch();
   const formRef = useRef();
   const { isLoggedIn } = useSelector((state) => state.auth);
 
-  const createUserImageChange = (e) => {
+  async function createUserImageChange(e) {
     const file = e.target.files[0];
     console.log(file);
 
-    if (file.size < 1024 * 1024 * 2 && file.type.startsWith("image")) {
+    if (file.size < 1024 * 1024 * 2 && file.type.startsWith("image/")) {
       setAvatar(file);
     } else {
-      toast.error(
-        `${file.name} has invalid file size greater than 2MB or type`
-      );
+      toast.error("Please select an image less than 2 MB");
       setAvatar(null);
     }
-  };
+  }
 
   const onSubmit = async (values, actions) => {
     console.log(values);
@@ -80,6 +76,7 @@ const Register = () => {
     console.log(avatar);
     const formData = new FormData();
     formData.append("file", avatar);
+
     const res = await uploadPhoto(formData);
     console.log(res);
 

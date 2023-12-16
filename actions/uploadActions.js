@@ -1,7 +1,7 @@
 "use server";
 
-import fs from "fs";
 import path from "path";
+import fs from "fs/promises";
 import { v4 as uuidv4 } from "uuid";
 import os from "os";
 import cloudinary from "cloudinary";
@@ -14,13 +14,17 @@ cloudinary.config({
 
 async function savePhotoToLocal(formData) {
   const file = formData.get("file");
+  console.log(file);
 
-  const singleBufferPromise = file.arrayBuffer().then((data) => {
+  const singleBufferPromise = await file.arrayBuffer().then((data) => {
     const buffer = Buffer.from(data);
+    console.log(buffer);
     const name = uuidv4();
     const ext = file.type.split("/")[1];
+    console.log({ name, ext });
 
     const tempDir = os.tmpdir();
+
     const uploadDir = path.join(tempDir, `/${name}.${ext}`);
     fs.writeFile(uploadDir, buffer);
 
@@ -30,25 +34,24 @@ async function savePhotoToLocal(formData) {
   return await singleBufferPromise;
 }
 
-async function uploadPhotosToCloudinary(newFile) {
-  const singlePhotoPromise = cloudinary.v2.uploader.upload(newFile.filepath, {
-    folder: "ShopingGo_customers",
-  });
+async function savePhotoToCloudinary(newFile) {
+  const uploadSinglePhotoPromise = await cloudinary.v2.uploader.upload(
+    newFile.filepath,
+    {
+      folder: "ShopingGo_customers",
+    }
+  );
 
-  return await singlePhotoPromise;
+  return await uploadSinglePhotoPromise;
 }
-
-const delay = (delayInms) => {
-  return new Promise((resolve) => setTimeout(resolve, delayInms));
-};
 
 const uploadPhoto = async (formData) => {
   try {
     const newFile = await savePhotoToLocal(formData);
-    console.log(newFile);
-    const photo = await uploadPhotosToCloudinary(newFile);
 
-    await delay(2000);
+    const photo = await savePhotoToCloudinary(newFile);
+
+    fs.unlink(newFile.filepath);
 
     return photo;
   } catch (error) {
