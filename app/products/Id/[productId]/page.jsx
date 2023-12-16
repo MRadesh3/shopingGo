@@ -128,8 +128,8 @@ const ProductDetails = (req, { params }) => {
                 </div>
                 <div className="lg:w-1/2 p-4 flex flex-col justify-center ">
                   <div className="">
-                    <div className="my-2">
-                      <h1 className="text-xl text-justify font-satoshi font-bold text-[#4b077c] mb-1">
+                    <div className="my-2 text-justify break-all hyphens-auto">
+                      <h1 className="text-xl font-satoshi font-bold text-[#4b077c] mb-1">
                         {product.name}
                       </h1>
                       <p className="text-slate-500 text-md">
