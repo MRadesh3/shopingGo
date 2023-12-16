@@ -3,7 +3,6 @@
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getadminproducts } from "@app/redux/features/admin/products/productSliceAd";
 import Loading from "@app/loading";
 import MetaData from "@components/MetaData";
 import { useRouter } from "next/navigation";
@@ -11,6 +10,7 @@ import Sidebar from "@components/Sidebar";
 import Link from "next/link";
 import EditIcon from "@mui/icons-material/Edit";
 import Image from "next/image";
+import { getadminloginproducts } from "@app/redux/features/admin/products/productSliceAd";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -18,7 +18,7 @@ const Page = () => {
   const { products, isLoading } = useSelector((state) => state.productAd);
 
   useEffect(() => {
-    dispatch(getadminproducts());
+    dispatch(getadminloginproducts());
   }, [dispatch, router.asPath]);
 
   const columns = [

@@ -41,10 +41,10 @@ const Register = () => {
     console.log(file);
 
     if (file.size < 1024 * 1024 * 2 && file.type.startsWith("image/")) {
-      setAvatar(file);
+      return setAvatar(file);
     } else {
       toast.error("Please select an image less than 2 MB");
-      setAvatar(null);
+      return setAvatar(null);
     }
   }
 

@@ -231,7 +231,7 @@ const ProductDetails = (req, { params }) => {
                     <hr className=" h-[1.5px] my-8 bg-gray-200 border-0 rounded dark:bg-gray-300" />
                     <div className="my-1">
                       <h6 className="text-slate-500">Description : </h6>{" "}
-                      <p className="my-2">{product.description}</p>
+                      <p className="my-2 text-justify">{product.description}</p>
                       <button
                         onClick={submitReviewToggle}
                         className="bg-transparent border-[1px] border-[#4b077c] mt-3 text-md text-[#4b077c] px-6 py-2 rounded-lg hover:bg-[#4b077c] hover:text-white"

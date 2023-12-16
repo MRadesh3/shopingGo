@@ -4,6 +4,13 @@ const API_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api/products`;
 
 const ADMIN_API_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/admin/products`;
 
+// Get Admin Login Products
+
+const getadminloginproducts = async () => {
+  const response = await axios.get(`${ADMIN_API_URL}`);
+  return response.data;
+};
+
 // Get Admin Products
 
 const getadminproducts = async () => {
@@ -46,6 +53,7 @@ const deleteproduct = async (productId) => {
 };
 
 const productServiceAd = {
+  getadminloginproducts,
   getadminproducts,
   createnewproduct,
   getproductdetails,

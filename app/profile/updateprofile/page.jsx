@@ -48,10 +48,10 @@ const Page = () => {
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
 
-    if (file.size < 1024 * 1024 && file.type.startsWith("image/")) {
+    if (file.size < 1024 * 1024 * 2 && file.type.startsWith("image/")) {
       return setAvatar(file);
     } else {
-      toast.error("Please select an image less than 1MB");
+      toast.error("Please select an image less than 2MB");
       return setAvatar(null);
     }
   };

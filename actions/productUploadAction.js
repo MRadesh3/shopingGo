@@ -1,103 +1,72 @@
-// import cloudinary from "cloudinary";
+"use server";
 
-// cloudinary.config({
-//   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-//   api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
-//   api_secret: process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET,
-// });
+import path from "path";
+import fs from "fs/promises";
+import { v4 as uuidv4 } from "uuid";
+import os from "os";
+import cloudinary from "cloudinary";
 
-// async function uploadProductPhotosToCloudinary(allImages) {
-//   const multipleProductPhotosPromise = allImages.map((image) =>
-//     cloudinary.v2.uploader.upload(
-//       image,
-//       {
-//         upload_preset: "hghia8m3",
-//         allowed_formats: ["jpg", "png", "jpeg", "webp", "gif"],
-//       },
-//       {
-//         function(error, result) {
-//           console.log(result, error);
-//           return result;
-//         },
-//       }
-//     )
-//   );
+cloudinary.config({
+  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+  api_secret: process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET,
+});
 
-//   return await Promise.all(multipleProductPhotosPromise);
-// }
+async function saveProductPhotosToLocal(formData) {
+  const files = formData.getAll("files");
 
-// const uploadProductPhotos = async (allImages) => {
-//   try {
-//     const photos = await uploadProductPhotosToCloudinary(allImages);
+  const multipeBuffersPromise = files.map((file) =>
+    file.arrayBuffer().then((data) => {
+      const buffer = Buffer.from(data);
+      const name = uuidv4();
+      const ext = file.type.split("/")[1];
+      const tempDir = os.tmpdir();
 
-//     await delay(2000);
+      const uploadDir = path.join(tempDir, `/${name}.${ext}`);
+      fs.writeFile(uploadDir, buffer);
 
-//     return photos;
-//   } catch (error) {
-//     return { errorMsg: error.message };
-//   }
-// };
+      return { filepath: uploadDir, filename: file.name };
+    })
+  );
 
-// export default uploadProductPhotos;
+  return await Promise.all(multipeBuffersPromise);
+}
 
-// // import path from "path";
-// // import fs from "fs/promises";
-// // import { v4 as uuidv4 } from "uuid";
-// // import os from "os";
-// // import cloudinary from "cloudinary";
+async function saveProductPhotosToCloudinary(newFiles) {
+  const uploadMultiplePhotosPromise = newFiles.map((newFile) =>
+    cloudinary.v2.uploader.upload(newFile.filepath, {
+      folder: "ShopingGo_products",
+    })
+  );
 
-// // cloudinary.config({
-// //   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-// //   api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
-// //   api_secret: process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET,
-// // });
+  return await Promise.all(uploadMultiplePhotosPromise);
+}
 
-// // async function uploadProductPhotosToCloudinary(allImages) {
-// //   const multipleProductPhotosPromise = allImages.map((image) =>
-// //     cloudinary.v2.uploader.upload(
-// //       image,
-// //       {
-// //         upload_preset: "hghia8m3",
-// //         public_id: `avatar`,
-// //         allowed_formats: ["jpg", "png", "jpeg", "webp", "gif"],
-// //       },
-// //       {
-// //         function(error, result) {
-// //           console.log(result, error);
-// //         },
-// //       }
-// //     )
-// //   );
+const uploadProductPhotos = async (formData) => {
+  try {
+    const newFiles = await saveProductPhotosToLocal(formData);
+    console.log(newFiles);
 
-// //   return await Promise.all(multipleProductPhotosPromise);
-// // }
+    const photos = await saveProductPhotosToCloudinary(newFiles);
 
-// // const delay = (delayInms) => {
-// //   return new Promise((resolve) => setTimeout(resolve, delayInms));
-// // };
+    newFiles.forEach((file) => fs.unlink(file.filepath));
 
-// // const uploadProductPhotos = async (allImages) => {
-// //   try {
-// //     const photos = await uploadProductPhotosToCloudinary(allImages);
+    return photos;
+  } catch (error) {
+    return { errorMsg: error.message };
+  }
+};
 
-// //     await delay(2000);
+export default uploadProductPhotos;
 
-// //     return photos;
-// //   } catch (error) {
-// //     return { errorMsg: error.message };
-// //   }
-// // };
+// Delete product photos
 
-// // export default uploadProductPhotos;
+export async function deleteProductPhotoFromCloudinary(public_id) {
+  try {
+    const deleteProductPhotoPromise = cloudinary.v2.uploader.destroy(public_id);
 
-// // // Delete product photos
-
-// // export const deleteProductPhotos = async (publicId) => {
-// //   try {
-// //     const deleteProductPhotosPromise = cloudinary.v2.uploader.destroy(publicId);
-
-// //     return await deleteProductPhotosPromise;
-// //   } catch (error) {
-// //     return { errorMsg: error.message };
-// //   }
-// // };
+    return await deleteProductPhotoPromise;
+  } catch (error) {
+    return { errorMsg: error.message };
+  }
+}

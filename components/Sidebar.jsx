@@ -32,7 +32,7 @@ const Sidebar = () => {
           <DashboardIcon fontSize="small" /> Dashboard
         </p>
       </Link>
-      <Link href="" className="font-satoshi">
+      <div className="font-satoshi">
         <TreeView
           defaultCollapseIcon={<ExpandMoreIcon fontSize="small" />}
           defaultExpandIcon={<KeyboardArrowRightIcon fontSize="small" />}
@@ -64,7 +64,7 @@ const Sidebar = () => {
             </Link>
           </TreeItem>
         </TreeView>
-      </Link>
+      </div>
       <Link
         href="/admin/orders"
         className="hover:text-slate-800 font-satoshi hover:scale-110 transition duration-300 ease-in-out"

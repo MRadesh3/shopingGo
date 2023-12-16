@@ -6,7 +6,7 @@ import Link from "next/link";
 import LineChart from "@components/LineChart";
 import DoughnutChart from "@components/DoughnutChart";
 import {
-  getadminproducts,
+  getadminloginproducts,
   RESET_PRODUCT_STATE,
 } from "@app/redux/features/admin/products/productSliceAd";
 import {
@@ -40,7 +40,7 @@ const Page = () => {
 
   useEffect(() => {
     try {
-      dispatch(getadminproducts());
+      dispatch(getadminloginproducts());
       dispatch(getallorders());
       dispatch(getallusers());
     } catch (error) {

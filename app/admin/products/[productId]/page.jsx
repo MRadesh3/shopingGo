@@ -27,7 +27,7 @@ import { generateSHA1 } from "@functions/signature";
 import { generateSignature } from "@functions/signature";
 import AlertDialogBox from "@components/Alert";
 import uploadProductPhotos, {
-  deleteProductPhotos,
+  deleteProductPhotoFromCloudinary,
 } from "@actions/productUploadAction";
 
 const categories = [
@@ -63,12 +63,10 @@ const Page = (req, { params }) => {
     }
   }, [dispatch, req.params.productId, product]);
 
-  console.log(oldAllImages);
-
   const deleteProductHandler = async () => {
     product &&
       product.images.forEach((image, index) => {
-        deleteProductPhotos(image.public_id);
+        deleteProductPhotoFromCloudinary(image.public_id);
       });
 
     try {
@@ -82,7 +80,7 @@ const Page = (req, { params }) => {
   };
 
   const handlePrevDeleteFiles = async (publicId) => {
-    const resDelete = await deleteProductPhotos(publicId);
+    const resDelete = await deleteProductPhotoFromCloudinary(publicId);
     console.log(resDelete);
     const newImages = oldAllImages.filter(
       (image) => image.public_id !== publicId
@@ -133,13 +131,16 @@ const Page = (req, { params }) => {
     const res = await uploadProductPhotos(formData);
     console.log(res);
 
-    const productImages = res.map((image) => ({
-      key: image.public_id,
-      public_id: image.public_id,
-      url: image.url,
-    }));
+    const uploadImages = [];
 
-    const newAllProductImages = [...oldAllImages, ...productImages];
+    res.forEach((image) => {
+      uploadImages.push({
+        public_id: image.public_id,
+        url: image.secure_url,
+      });
+    });
+
+    const newAllProductImages = [...oldAllImages, ...uploadImages];
 
     if (newAllProductImages.length < 1) {
       toast.error("Please add atleast one image");

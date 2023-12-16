@@ -11,6 +11,27 @@ const initialState = {
   message: "",
 };
 
+// Get Admin Login Products
+
+export const getadminloginproducts = createAsyncThunk(
+  "productAd/getadminloginproducts",
+
+  async (_, thunkAPI) => {
+    try {
+      return await productServiceAd.getadminloginproducts();
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 // Get Admin Products
 
 export const getadminproducts = createAsyncThunk(
@@ -129,6 +150,23 @@ const productSliceAd = createSlice({
   },
   extraReducers: (builder) => {
     builder
+
+      // Get Admin Products
+      .addCase(getadminloginproducts.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getadminloginproducts.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.products = action.payload.products;
+        console.log(action.payload.products);
+      })
+      .addCase(getadminloginproducts.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+
       // Get Admin Products
       .addCase(getadminproducts.pending, (state) => {
         state.isLoading = true;
