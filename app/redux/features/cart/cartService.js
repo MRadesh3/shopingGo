@@ -1,4 +1,5 @@
 import axios from "axios";
+import { offerPrice, shortenText } from "@functions";
 
 const API_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api/products`;
 
@@ -10,7 +11,10 @@ const addproducttocart = async (productId, quantity) => {
     _id: data.product._id,
     name: data.product.name,
     image: data.product.images[0].url,
-    price: data.product.price,
+    price:
+      data.product.price > 5000
+        ? offerPrice(data.product.price, 20)
+        : offerPrice(data.product.price, 10),
     stock: data.product.stock,
     quantity,
   };

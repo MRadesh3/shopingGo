@@ -1,6 +1,7 @@
 "use client";
 
 import Loading from "@app/loading";
+import { useState } from "react";
 import CartItem from "@components/CartItem";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -17,7 +18,10 @@ import MetaData from "@components/MetaData";
 const Page = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const [storedCartItems, setStoredCartItems] = useState([]);
   const { cartItems, isLoading } = useSelector((state) => state.cart);
+
+  console.log(cartItems);
 
   const increaseQuantity = (id, quantity, stock) => {
     const newQuantity = quantity + 1;
@@ -41,9 +45,10 @@ const Page = () => {
   };
 
   useEffect(() => {
-    const cartItems = JSON.parse(localStorage.getItem("cartItems"));
-    if (cartItems) {
-      cartItems.forEach((item) => {
+    const storedCartItems = JSON.parse(localStorage.getItem("cartItems"));
+    setStoredCartItems(storedCartItems);
+    if (storedCartItems && storedCartItems.length > 0) {
+      storedCartItems.forEach((item) => {
         dispatch(
           addproducttocart({ productId: item._id, quantity: item.quantity })
         );
@@ -186,7 +191,7 @@ const Page = () => {
             <div className="col-start-5 col-end-7 mt-5 max-md:col-span-6">
               <button
                 onClick={() => {
-                  cartItems && cartItems.length > 0
+                  cartItems && storedCartItems && cartItems.length > 0
                     ? router.push("/checkout/shipping")
                     : toast.error("No products in cart");
                 }}

@@ -292,7 +292,7 @@ const Register = () => {
                       <center>
                         <input
                           type="submit"
-                          value="Continue"
+                          value={isSubmitting ? "Loading ..." : "Continue"}
                           name="submit"
                           disabled={isSubmitting ? true : false}
                           className={

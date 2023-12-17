@@ -21,7 +21,9 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import {
   addproducttocart,
+  removeproductfromcart,
   shippingaddress,
+  RESET_CART_STATE,
 } from "../app/redux/features/cart/cartSlice";
 import {
   createneworder,
@@ -46,6 +48,7 @@ const Page = () => {
   const { cartItems, shippingAddress, isLoading } = useSelector(
     (state) => state.cart
   );
+  const { isSuccess } = useSelector((state) => state.order);
 
   useEffect(() => {
     const orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));
@@ -130,6 +133,10 @@ const Page = () => {
           dispatch(createneworder(order));
           toast.success("Order placed successfully");
           router.push("/checkout/success");
+          dispatch(RESET_CART_STATE());
+          cartItems.forEach((item) => {
+            dispatch(removeproductfromcart(item._id));
+          });
         } else {
           toast.error("There is some issue while payment processing");
         }

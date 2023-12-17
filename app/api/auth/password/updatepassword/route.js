@@ -20,6 +20,16 @@ export const PUT = async (req, res, next) => {
         );
       }
 
+      const isPasswordMatchedWithNewPassword = await user.comparePassword(
+        newPassword
+      );
+      if (isPasswordMatchedWithNewPassword) {
+        return NextResponse.json(
+          { message: "New password cannot be same as old password" },
+          { status: 401 }
+        );
+      }
+
       if (newPassword !== confirmPassword) {
         return NextResponse.json(
           { message: "Passwords do not match" },

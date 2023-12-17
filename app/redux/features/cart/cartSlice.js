@@ -85,10 +85,6 @@ const cartSlice = createSlice({
       state.cartItems = [];
       state.cartTotalQuantity = 0;
       state.cartTotalAmount = 0;
-      isLoading = false;
-      isSuccess = false;
-      isError = false;
-      message = "";
     },
   },
 

@@ -19,6 +19,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const [activeLink, setActiveLink] = useState(null);
+  const [storedCartItems, setStoredCartItems] = useState([]);
   const { isLoggedIn, user, isSuccess } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.cart);
 
@@ -38,6 +39,8 @@ const Navbar = () => {
     if (isLoggedIn && isSuccess) {
       dispatch(getuser());
     }
+    const storedCartItems = JSON.parse(localStorage.getItem("cartItems"));
+    setStoredCartItems(storedCartItems);
   }, [dispatch, isLoggedIn, isSuccess]);
 
   return (
@@ -93,7 +96,7 @@ const Navbar = () => {
           >
             <BsCartCheckFill className="h-8 w-8" />
             <span className="max-md:hidden">Cart</span>
-            {cartItems.length > 0 ? (
+            {cartItems && cartItems.length > 0 ? (
               <span className="cart_count">{cartItems.length}</span>
             ) : (
               <span className="cart_count">0</span>
