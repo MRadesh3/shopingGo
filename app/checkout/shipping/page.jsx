@@ -292,13 +292,17 @@ const Register = () => {
                       <center>
                         <input
                           type="submit"
-                          value={isSubmitting ? "Loading ..." : "Continue"}
+                          value={
+                            isSubmitting
+                              ? "Loading..."
+                              : "Save Shipping Address"
+                          }
                           name="submit"
                           disabled={isSubmitting ? true : false}
                           className={
                             isSubmitting
-                              ? "bg-gray-400 max-md:mb-4 text-sm font-semibold text-white px-4 py-2 rounded-lg cursor-not-allowed col-span-2 max-md:col-span-4"
-                              : "bg-[#fe7f07] max-md:mb-4 text-sm font-semibold text-white px-4 py-2 rounded-lg cursor-pointer col-span-2 max-md:col-span-4"
+                              ? "bg-gray-400 mt-6 max-xl:mb-4 text-md font-semibold text-white px-6 py-2 rounded-lg cursor-not-allowed"
+                              : "bg-[#fe7f07] mt-6 max-xl:mb-4 text-md font-semibold text-white px-6 py-2 rounded-lg cursor-pointer"
                           }
                         />
                       </center>

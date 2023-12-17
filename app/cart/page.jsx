@@ -195,9 +195,9 @@ const Page = () => {
                     ? router.push("/checkout/shipping")
                     : toast.error("No products in cart");
                 }}
-                className="bg-[#fe7f07] text-md w-full font-semibold text-white px-6 py-2 rounded-lg"
+                className="bg-green-500 text-md w-full font-semibold text-white px-6 py-2 rounded-lg"
               >
-                Checkout
+                Buy Now
               </button>
             </div>
           </div>

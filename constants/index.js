@@ -66,19 +66,19 @@ export const categories = [
   },
   {
     id: 2,
-    title: "Fashion & Styling",
+    title: "Clothing / Fashion",
     image: "/assets/images/fashion.jpg",
     discount: "Upto 45% Off",
   },
   {
     id: 3,
-    title: "Sports",
+    title: "Sports / Outdoors",
     image: "/assets/images/sports.jpg",
     discount: "Upto 35% Off",
   },
   {
     id: 4,
-    title: "Personal Care",
+    title: "Beauty / Personal Care",
     image: "/assets/images/personalcare.png",
     discount: "Upto 50% Off",
   },

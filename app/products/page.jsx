@@ -20,6 +20,7 @@ import { FcFilledFilter } from "react-icons/fc";
 import MetaData from "@components/MetaData";
 import { BsCartCheckFill } from "react-icons/bs";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const categories = [
   "Mobiles",
@@ -36,11 +37,12 @@ const categories = [
   "Travel / Luggage",
 ];
 
-const Page = () => {
+const Page = (req, res) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [price, setPrice] = useState([0, 1000000]);
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(req.searchParams.category);
   const [ratings, setRatings] = useState(0);
   const {
     isLoading,
@@ -64,7 +66,6 @@ const Page = () => {
     setRatings(0);
     setCurrentPage(1);
   };
-  console.log(category);
 
   const addToCartHandler = (productId, quantity) => {
     dispatch(addproducttocart({ productId, quantity }));
