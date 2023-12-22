@@ -129,11 +129,11 @@ const Page = () => {
                 <DataGrid
                   rows={rows}
                   columns={columns}
-                  pageSize={10}
+                  pageSize={20}
                   initialState={{
                     pagination: {
                       paginationModel: {
-                        pageSize: 10,
+                        pageSize: 20,
                       },
                     },
                   }}

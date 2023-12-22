@@ -14,14 +14,20 @@ export const GET = async (req, res, next) => {
 
     await connectToDB();
 
-    const countQuery = new ApiFeatures(Product.find(), searchParamsObj)
+    const countQuery = new ApiFeatures(
+      Product.find().sort({ createdAt: -1 }),
+      searchParamsObj
+    )
       .search()
       .filter();
 
     const totalProductCount = await countQuery.query.countDocuments();
 
     const resultPerPage = 12;
-    const apiFeature = new ApiFeatures(Product.find(), searchParamsObj)
+    const apiFeature = new ApiFeatures(
+      Product.find().sort({ createdAt: -1 }),
+      searchParamsObj
+    )
       .search()
       .filter()
       .pagination(resultPerPage);

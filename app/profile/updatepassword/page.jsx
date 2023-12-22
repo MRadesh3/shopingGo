@@ -105,7 +105,7 @@ const Login = () => {
                 validationSchema={updatePasswordSchema}
                 onSubmit={onSubmit}
               >
-                {({ errors, touched, values, handleChange }) => (
+                {({ errors, touched, values, handleChange, isSubmitting }) => (
                   <Form>
                     <label
                       htmlFor="oldPassword"
@@ -219,12 +219,17 @@ const Login = () => {
                     )}
 
                     <center>
-                      <button
+                      <input
                         type="submit"
-                        className="bg-[#fe7f07] mt-6 max-xl:mb-4 text-md font-semibold text-white px-6 py-2 rounded-lg"
-                      >
-                        Change Password
-                      </button>
+                        value={isSubmitting ? "Loading ..." : "Change Password"}
+                        name="submit"
+                        disabled={isSubmitting ? true : false}
+                        className={
+                          isSubmitting
+                            ? "bg-gray-400 mt-6 max-xl:mb-4 text-md font-semibold text-white px-6 py-2 rounded-lg cursor-not-allowed"
+                            : "bg-[#fe7f07] mt-6 max-xl:mb-4 text-md font-semibold text-white px-6 py-2 rounded-lg cursor-pointer"
+                        }
+                      />
                     </center>
                     <p className="text-md text-slate-500 text-center my-3">
                       Go back to{" "}
@@ -236,20 +241,6 @@ const Login = () => {
                 )}
               </Formik>
             )}
-            {/* <div className="relative flex py-6 items-center">
-            <div className="flex-grow border-t border-gray-400"></div>
-            <span className="flex-shrink mx-4 text-gray-500">
-              Or continue with
-            </span>
-            <div className="flex-grow border-t border-gray-400"></div>
-          </div> */}
-            {/* <div
-            onClick={() => googleSignIn()}
-            className="flex cursor-pointer justify-center gap-5 items-center border-slate-400 border px-2 py-2 rounded-lg"
-          >
-            <FcGoogle className="text-xl" />
-            <p>Login with Google</p>
-          </div> */}
           </div>
         </div>
       </div>
