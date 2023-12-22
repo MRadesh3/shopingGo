@@ -125,6 +125,59 @@ const ProductDetails = (req, { params }) => {
                       </SwiperSlide>
                     ))}
                   </Swiper>
+                  <div>
+                    <h1 className="text-xl font-satoshi font-bold text-[#4b077c] my-10">
+                      Facilities
+                    </h1>
+                    <div className="grid grid-cols-4 gap-5">
+                      <div className="flex flex-col justify-center items-center gap-5 max-lg:col-span-2">
+                        <Image
+                          src="/assets/icons/brand-image.png"
+                          width={50}
+                          height={50}
+                          alt="Brand Image"
+                        ></Image>
+                        <p className="text-base text-slate-500 text-center">
+                          Top Brand
+                        </p>
+                      </div>
+                      <div className="flex flex-col justify-center items-center gap-5 max-lg:col-span-2">
+                        <Image
+                          src="/assets/icons/return.png"
+                          width={50}
+                          height={50}
+                          alt="Return Image"
+                        ></Image>
+                        <p className="text-base text-slate-500 text-center">
+                          7 Days Return & Exchange
+                        </p>
+                      </div>
+                      <div className="flex flex-col justify-center items-center gap-5 max-lg:col-span-2">
+                        <Image
+                          src="/assets/icons/transaction.png"
+                          width={50}
+                          height={50}
+                          alt="Transaction Image"
+                        ></Image>
+                        <p className="text-base text-slate-500 text-center">
+                          Secure Transactions
+                        </p>
+                      </div>
+                      {product && product.price > 500 && (
+                        <div className="flex flex-col justify-center items-center gap-5 max-lg:col-span-2">
+                          <Image
+                            src="/assets/icons/free-delivery.png"
+                            width={50}
+                            height={50}
+                            alt="Transaction Image"
+                          ></Image>
+                          <p className="text-base text-slate-500 text-center">
+                            Free ShopingGo Delivery
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
                 <div className="lg:w-1/2 p-4 flex flex-col justify-center ">
                   <div className="">
