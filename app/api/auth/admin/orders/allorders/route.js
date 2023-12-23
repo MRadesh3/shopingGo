@@ -9,7 +9,7 @@ export const GET = async (req, res, next) => {
       try {
         await connectToDB();
 
-        const orders = await Order.find();
+        const orders = await Order.find().sort({ createdAt: -1 });
 
         let totalAmount = 0;
 

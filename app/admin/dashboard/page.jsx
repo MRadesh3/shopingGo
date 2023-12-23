@@ -39,9 +39,16 @@ const Page = () => {
   const inStock = products && products.length - outOfStock;
 
   useEffect(() => {
-    dispatch(getadminloginproducts());
-    dispatch(getallorders());
-    dispatch(getallusers());
+    try {
+      dispatch(getadminloginproducts());
+      dispatch(getallorders());
+      dispatch(getallusers());
+    } catch (error) {
+      console.log(error);
+      dispatch(RESET_ORDER());
+      dispatch(RESET_PRODUCT_STATE());
+      dispatch(RESET_USER());
+    }
   }, [dispatch]);
 
   return (

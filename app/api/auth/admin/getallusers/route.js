@@ -9,7 +9,7 @@ export const GET = async (req, res) => {
       try {
         await connectToDB();
 
-        const users = await User.find({});
+        const users = await User.find({}).sort({ createdAt: -1 });
 
         return NextResponse.json({ users }, { status: 200 });
       } catch (error) {
