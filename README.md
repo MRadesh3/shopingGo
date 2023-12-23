@@ -38,15 +38,15 @@ Here are screenshots that show the E-commerce demo application in use.
 
 #### Home Page
 
-![Home Page](assets/screenshots/home_page.png?raw=true "Optional Title")
+![Home Page](./public/screenshots/home_page.png?raw=true "Optional Title")
 
 #### Product Details Page
 
-![Product Details Page](assets/screenshots/product_details.png?raw=true "Optional Title")
+![Product Details Page](./public/screenshots/product_details.png?raw=true "Optional Title")
 
 #### Shoping Cart
 
-![Shoping Cart](assets/screenshots/cart.png?raw=true "Optional Title")
+![Shoping Cart](./public/screenshots/cart.png?raw=true "Optional Title")
 
 ## Getting Started
 
