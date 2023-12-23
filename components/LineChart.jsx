@@ -54,4 +54,6 @@ const LineChart = React.memo(({ totalAmount }) => {
   return <Line options={options} data={data} />;
 });
 
+LineChart.displayName = "LineChart";
+
 export default LineChart;

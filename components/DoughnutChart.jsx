@@ -24,4 +24,6 @@ const DoughnutChart = React.memo(({ outOfStock, inStock }) => {
   return <Doughnut data={data} />;
 });
 
+DoughnutChart.displayName = "DoughnutChart";
+
 export default DoughnutChart;
