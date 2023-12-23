@@ -107,7 +107,7 @@ const Page = () => {
                   </Link>
                 </div>
               </div>
-              <div className="mb-5">
+              <div className="mb-5 mx-auto w-[80%] max-lg:w-full">
                 <div className="mb-20">
                   <LineChart totalAmount={totalAmount && totalAmount} />
                 </div>
@@ -123,7 +123,7 @@ const Page = () => {
                       Out of Stock : {outOfStock}
                     </p>
                   </div>
-                  <div className="col-span-2 max-md:col-span-3">
+                  <div className="col-span-2 max-md:col-span-3 max-md:w-full w-[60%] mx-auto">
                     <DoughnutChart outOfStock={outOfStock} inStock={inStock} />
                   </div>
                 </div>
