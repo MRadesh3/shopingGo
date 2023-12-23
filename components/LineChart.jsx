@@ -44,7 +44,7 @@ const LineChart = ({ totalAmount }) => {
     datasets: [
       {
         label: "TOTAL AMOUNT",
-        data: [0, 20000000],
+        data: [0, totalAmount],
         borderColor: "#fe7f07",
         backgroundColor: "rgba(254,127,7,0.7)",
         hoverBackgroundColor: "red",

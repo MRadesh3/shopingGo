@@ -39,16 +39,9 @@ const Page = () => {
   const inStock = products && products.length - outOfStock;
 
   useEffect(() => {
-    try {
-      dispatch(getadminloginproducts());
-      dispatch(getallorders());
-      dispatch(getallusers());
-    } catch (error) {
-      console.log(error);
-      dispatch(RESET_ORDER());
-      dispatch(RESET_PRODUCT_STATE());
-      dispatch(RESET_USER());
-    }
+    dispatch(getadminloginproducts());
+    dispatch(getallorders());
+    dispatch(getallusers());
   }, [dispatch]);
 
   return (
@@ -114,7 +107,7 @@ const Page = () => {
                   </Link>
                 </div>
               </div>
-              <div className="mb-5 mx-auto w-[80%] max-lg:w-full">
+              <div className="mb-5">
                 <div className="mb-20">
                   <LineChart totalAmount={totalAmount && totalAmount} />
                 </div>
@@ -130,7 +123,7 @@ const Page = () => {
                       Out of Stock : {outOfStock}
                     </p>
                   </div>
-                  <div className="col-span-2 max-md:col-span-3 max-md:w-full w-[60%] mx-auto">
+                  <div className="col-span-2 max-md:col-span-3">
                     <DoughnutChart outOfStock={outOfStock} inStock={inStock} />
                   </div>
                 </div>

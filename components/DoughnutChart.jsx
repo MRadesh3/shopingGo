@@ -10,7 +10,7 @@ const DoughnutChart = ({ outOfStock, inStock }) => {
     datasets: [
       {
         label: "Product Stock",
-        data: [10, 100],
+        data: [outOfStock, inStock],
         backgroundColor: ["#fe7f07", "#4b077c"],
         hoverBackgroundColor: [
           "rgba(254,127,7,0.9)",
