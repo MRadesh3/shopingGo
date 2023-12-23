@@ -4,7 +4,7 @@ import { Doughnut } from "react-chartjs-2";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const DoughnutChart = ({ outOfStock, inStock }) => {
+const DoughnutChart = React.memo(({ outOfStock, inStock }) => {
   const data = {
     labels: ["Out of Stock", "In Stock"],
     datasets: [
@@ -22,6 +22,6 @@ const DoughnutChart = ({ outOfStock, inStock }) => {
     ],
   };
   return <Doughnut data={data} />;
-};
+});
 
 export default DoughnutChart;

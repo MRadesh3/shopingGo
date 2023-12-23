@@ -10,9 +10,6 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { getallorders } from "@app/redux/features/admin/orders/orderSliceAd";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 ChartJS.register(
   CategoryScale,
@@ -40,7 +37,7 @@ export const options = {
 
 const labels = ["Initial Amount", "Amount Earned"];
 
-const LineChart = ({ totalAmount }) => {
+const LineChart = React.memo(({ totalAmount }) => {
   console.log(totalAmount);
   const data = {
     labels,
@@ -55,6 +52,6 @@ const LineChart = ({ totalAmount }) => {
     ],
   };
   return <Line options={options} data={data} />;
-};
+});
 
 export default LineChart;
