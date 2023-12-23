@@ -4,13 +4,13 @@ import { Doughnut } from "react-chartjs-2";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const DoughnutChart = React.memo(({ outOfStock, inStock }) => {
+const DoughnutChart = ({ outOfStock, inStock }) => {
   const data = {
     labels: ["Out of Stock", "In Stock"],
     datasets: [
       {
         label: "Product Stock",
-        data: [outOfStock, inStock],
+        data: [10, 100],
         backgroundColor: ["#fe7f07", "#4b077c"],
         hoverBackgroundColor: [
           "rgba(254,127,7,0.9)",
@@ -22,8 +22,6 @@ const DoughnutChart = React.memo(({ outOfStock, inStock }) => {
     ],
   };
   return <Doughnut data={data} />;
-});
-
-DoughnutChart.displayName = "DoughnutChart";
+};
 
 export default DoughnutChart;
