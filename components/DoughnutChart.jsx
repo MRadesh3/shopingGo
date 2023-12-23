@@ -18,6 +18,7 @@ const DoughnutChart = ({ outOfStock, inStock }) => {
           "#FFCE56",
         ],
         borderWidth: 1,
+        maintainAspectRatio: false,
       },
     ],
   };
