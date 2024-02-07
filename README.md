@@ -98,7 +98,7 @@ To get started you can simply clone this `ShopingGo` repository and install the 
 
 ## 🚀 About Me
 
-Hello visitors , I'm a skilled web developer passionate about crafting user-centric and visually appealing websites. Proficient in JavaScript, Next.js, React.js, Node.js, MongoDB, HTML, and CSS, I bring ideas to life through clean and efficient code.
+Hello visitors, I'm a skilled web developer passionate about crafting user-centric and visually appealing websites. Proficient in JavaScript, Next.js, React.js, Node.js, MongoDB, HTML, and CSS, I bring ideas to life through clean and efficient code.
 
 ### My Projects
 
@@ -106,13 +106,13 @@ Hello visitors , I'm a skilled web developer passionate about crafting user-cent
 
 - **[DBATU - Student Drive ](https://mradesh3.github.io/DBATU-Student-Drive/)** : ( Role : Developer ) Welcome to DBATU - Student Drive, where we provide the data to students like projects PPTs, word files and many more.
 
-- **[Technical Trip](https://mradesh3.github.io/DBATU-Student-Drive/)** : ( Role : Developer ) Welcome to Technical Trip, where we introduce our users to the beneficial tools that they equired in their technical trip.
+- **[Technical Trip](https://mradesh3.github.io/DBATU-Student-Drive/)** : ( Role : Developer ) Welcome to Technical Trip, where we introduce our users to the beneficial tools that they require in their technical trip.
 
 Feel free to explore my [GitHub profile](https://github.com/MRadesh3) for more examples of my work.
 
 ### 🔗 Get In Touch
 
-[![Portfolio](https://img.shields.io/badge/my_portfolio-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://katherineoelsner.com/)
+[![Portfolio](https://img.shields.io/badge/my_portfolio-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://adeshsalsundar.online/)
 
 [![Linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/adesh-salsundar-a73b4121a/)
 
