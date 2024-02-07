@@ -234,9 +234,9 @@ const Login = () => {
 
                 <a
                   className="text-slate-500 text-lg font-semibold drop-shadow-lg"
-                  href="https://github.com/MRadesh3"
+                  href="https://adeshsalsundar.online/"
                 >
-                  Go to Portfolio Profile
+                  Go to Portfolio
                 </a>
               </div>
               <div className="mb-8">
